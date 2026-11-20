@@ -1,0 +1,355 @@
+{
+  "source": "https://note.com/x402inc/n/nb2221395494a",
+  "title": "x402 per-call APIの実装上の脆弱性 サマリー（決済後の未納品を含む支払い8段階の市場課題25件）",
+  "stages": [
+    "① 選ぶ",
+    "② 402 を受け取る",
+    "③ 署名して送る",
+    "④ 受け取って検証へ",
+    "⑤ 検証・送信",
+    "⑥ 確定",
+    "⑦ 本文を返す",
+    "⑧ 確かめる"
+  ],
+  "loser_labels": {
+    "buyer": "buyer（代金を失う、または違うものを受け取る・選び違える）",
+    "seller": "seller（未払いで渡す）",
+    "market": "市場全体",
+    "none": "仕様が定める範囲"
+  },
+  "items": [
+    {
+      "number": 1,
+      "title": "入力の検証を settle より先に行う",
+      "issues": [
+        "S1"
+      ]
+    },
+    {
+      "number": 2,
+      "title": "402の中身がコード上の設定と一致する",
+      "issues": [
+        "B6",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "number": 3,
+      "title": "paymentFlow とデータを返す順序",
+      "issues": [
+        "S2",
+        "K1"
+      ]
+    },
+    {
+      "number": 4,
+      "title": "重複チェックと記録",
+      "issues": [
+        "S7",
+        "K2"
+      ]
+    },
+    {
+      "number": 5,
+      "title": "支払いの対象と条件の一致",
+      "issues": [
+        "S9"
+      ]
+    },
+    {
+      "number": 6,
+      "title": "キャッシュ",
+      "issues": [
+        "S8"
+      ]
+    },
+    {
+      "number": 7,
+      "title": "有効期限",
+      "issues": []
+    },
+    {
+      "number": 8,
+      "title": "facilitator の結果確認",
+      "issues": [
+        "F1",
+        "F3"
+      ]
+    },
+    {
+      "number": 9,
+      "title": "決済の応答ヘッダを返す",
+      "issues": [
+        "F2"
+      ]
+    },
+    {
+      "number": 10,
+      "title": "SDKのバージョン",
+      "issues": [
+        "K3"
+      ]
+    },
+    {
+      "number": 11,
+      "title": "秘密情報",
+      "issues": []
+    }
+  ],
+  "issues": [
+    {
+      "id": "B1",
+      "layer": "buyer",
+      "stage": "③ 署名して送る",
+      "summary": "上限の置き場所が製品ごとに違う",
+      "who_loses": "buyer",
+      "items": [],
+      "in_skill_scope": false
+    },
+    {
+      "id": "B2",
+      "layer": "buyer",
+      "stage": "③ 署名して送る",
+      "summary": "署名前に受取先を確かめる手順がない",
+      "who_loses": "buyer",
+      "items": [],
+      "in_skill_scope": false
+    },
+    {
+      "id": "B3",
+      "layer": "buyer",
+      "stage": "① 選ぶ",
+      "summary": "取引数の順位が実需を表さない",
+      "who_loses": "buyer",
+      "items": [],
+      "in_skill_scope": false
+    },
+    {
+      "id": "B4",
+      "layer": "buyer",
+      "stage": "① 選ぶ",
+      "summary": "buyer 1人だけの取引",
+      "who_loses": "buyer",
+      "items": [],
+      "in_skill_scope": false
+    },
+    {
+      "id": "B5",
+      "layer": "buyer",
+      "stage": "① 選ぶ",
+      "summary": "同じ運営・再販の見分けがつかない",
+      "who_loses": "buyer",
+      "items": [],
+      "in_skill_scope": false
+    },
+    {
+      "id": "B6",
+      "layer": "buyer",
+      "stage": "② 402 を受け取る",
+      "summary": "402 から入力が分からない",
+      "who_loses": "buyer",
+      "items": [
+        2
+      ],
+      "in_skill_scope": true
+    },
+    {
+      "id": "B7",
+      "layer": "buyer",
+      "stage": "① 選ぶ",
+      "summary": "掲載が動作の保証にならない",
+      "who_loses": "buyer",
+      "items": [],
+      "in_skill_scope": false
+    },
+    {
+      "id": "S1",
+      "layer": "seller",
+      "stage": "④ 受け取って検証へ",
+      "summary": "入力を確かめる前に決済する",
+      "who_loses": "buyer",
+      "items": [
+        1
+      ],
+      "in_skill_scope": true
+    },
+    {
+      "id": "S2",
+      "layer": "seller",
+      "stage": "⑦ 本文を返す",
+      "summary": "正しい要求でも届かない（送金成立後に 500・503・タイムアウト）",
+      "who_loses": "buyer",
+      "items": [
+        3
+      ],
+      "in_skill_scope": true
+    },
+    {
+      "id": "S3",
+      "layer": "seller",
+      "stage": "⑦ 本文を返す",
+      "summary": "動作する API が少ない",
+      "who_loses": "buyer",
+      "items": [],
+      "in_skill_scope": false
+    },
+    {
+      "id": "S4",
+      "layer": "seller",
+      "stage": "⑧ 確かめる",
+      "summary": "届いても説明と違う",
+      "who_loses": "buyer",
+      "items": [],
+      "in_skill_scope": false
+    },
+    {
+      "id": "S5",
+      "layer": "seller",
+      "stage": "② 402 を受け取る",
+      "summary": "掲載価格と請求額が違う",
+      "who_loses": "buyer",
+      "items": [
+        2
+      ],
+      "in_skill_scope": true
+    },
+    {
+      "id": "S6",
+      "layer": "seller",
+      "stage": "② 402 を受け取る",
+      "summary": "署名に要る情報（EIP-712 の name・version など）を載せない",
+      "who_loses": "buyer",
+      "items": [
+        2
+      ],
+      "in_skill_scope": true
+    },
+    {
+      "id": "S7",
+      "layer": "seller",
+      "stage": "④ 受け取って検証へ",
+      "summary": "同じ署名で何度も返す",
+      "who_loses": "seller",
+      "items": [
+        4
+      ],
+      "in_skill_scope": true
+    },
+    {
+      "id": "S8",
+      "layer": "seller",
+      "stage": "⑦ 本文を返す",
+      "summary": "有料の応答がキャッシュから出る",
+      "who_loses": "seller",
+      "items": [
+        6
+      ],
+      "in_skill_scope": true
+    },
+    {
+      "id": "S9",
+      "layer": "seller",
+      "stage": "④ 受け取って検証へ",
+      "summary": "別の API の支払いで流用される",
+      "who_loses": "seller",
+      "items": [
+        5
+      ],
+      "in_skill_scope": true
+    },
+    {
+      "id": "F1",
+      "layer": "facilitator",
+      "stage": "⑤ 検証・送信",
+      "summary": "決済済みと返すが送金がない（settlement_pending と tx を返すが tx がチェーン上にない）",
+      "who_loses": "buyer",
+      "items": [
+        8
+      ],
+      "in_skill_scope": true
+    },
+    {
+      "id": "F2",
+      "layer": "facilitator",
+      "stage": "⑦ 本文を返す",
+      "summary": "決済の応答ヘッダが任意",
+      "who_loses": "buyer",
+      "items": [
+        9
+      ],
+      "in_skill_scope": true
+    },
+    {
+      "id": "F3",
+      "layer": "facilitator",
+      "stage": "⑤ 検証・送信",
+      "summary": "規則違反（送信者が公開された署名者でない など）",
+      "who_loses": "market",
+      "items": [
+        8
+      ],
+      "in_skill_scope": true
+    },
+    {
+      "id": "F4",
+      "layer": "facilitator",
+      "stage": "⑤ 検証・送信",
+      "summary": "1社への集中",
+      "who_loses": "market",
+      "items": [],
+      "in_skill_scope": false
+    },
+    {
+      "id": "K1",
+      "layer": "sdk",
+      "stage": "⑦ 本文を返す",
+      "summary": "settle の失敗を見ずに返す",
+      "who_loses": "seller",
+      "items": [
+        3
+      ],
+      "in_skill_scope": true
+    },
+    {
+      "id": "K2",
+      "layer": "sdk",
+      "stage": "④ 受け取って検証へ",
+      "summary": "再送対策が既定で無効",
+      "who_loses": "seller",
+      "items": [
+        4
+      ],
+      "in_skill_scope": true
+    },
+    {
+      "id": "K3",
+      "layer": "sdk",
+      "stage": "⑤ 検証・送信",
+      "summary": "Solana の支払い検証の欠陥（GHSA-qr2g-p6q7-w82m）",
+      "who_loses": "market",
+      "items": [
+        10
+      ],
+      "in_skill_scope": true
+    },
+    {
+      "id": "C1",
+      "layer": "chain",
+      "stage": "⑥ 確定",
+      "summary": "仕様が定めていること（EIP-3009 の nonce・有効期限・署名の検証）",
+      "who_loses": "none",
+      "items": [],
+      "in_skill_scope": false
+    },
+    {
+      "id": "C2",
+      "layer": "chain",
+      "stage": "⑧ 確かめる",
+      "summary": "送金の有無を取り違える（eth_getLogs の上限・不完全な応答）",
+      "who_loses": "buyer",
+      "items": [],
+      "in_skill_scope": false
+    }
+  ]
+}

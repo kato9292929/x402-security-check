@@ -1,0 +1,29 @@
+# Paths where a change needs a person to review it before merge (see CLAUDE.md).
+# One glob per line, matched against repository-relative paths. "**" crosses directories.
+
+# What users install and run
+.claude-plugin/**
+.mcp.json
+plugin.json
+mcp.json
+server.json
+package.json
+package-lock.json
+
+# The read-only guarantee: outbound requests, headers, RPC calls, tool surface
+server/src/http.ts
+server/src/rpc.ts
+server/src/server.ts
+
+# Data that decides verdicts
+data/advisories.json
+
+# The skill text is the owner's specification
+skills/**
+
+# Release and the harness itself
+.github/workflows/**
+.claude/**
+scripts/verify.sh
+risk-paths
+CLAUDE.md

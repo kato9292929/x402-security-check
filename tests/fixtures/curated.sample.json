@@ -1,0 +1,1522 @@
+{
+ "generated_at": "2026-11-20T11:59:36.186Z",
+ "last_run": "2026-11-16T13:15:46.405Z",
+ "summary": {
+  "operators": 32,
+  "endpoints": 80,
+  "purchased_on": "2026-11-16"
+ },
+ "cards": [
+  {
+   "operator": "payto:0xa9dd7cc9cbf0e05551332209289f04be36bc2315",
+   "slug": "claw402",
+   "name": "Claw402",
+   "party": "1P",
+   "via": null,
+   "host": "claw402.ai",
+   "domain": "claw402.ai",
+   "category": "Messaging",
+   "logo": "/logos/claw402.ico",
+   "logo_source": "official",
+   "initials": "CL",
+   "badge": "as_described",
+   "badge_label": "説明どおり",
+   "endpoints": 3,
+   "bought": 2,
+   "as_described": 2,
+   "price_min": 0.002,
+   "delivered_without_payment": 0,
+   "not_bought_reason": null,
+   "tx": 4425,
+   "buyers": 33,
+   "item_ids": [
+    "08f46a64fb0dc0bb",
+    "ee0849497eb49caf",
+    "b991061d53f7b1b5"
+   ]
+  },
+  {
+   "operator": "payto:0xf732ea490c5766071785a2310523f7fa2cebb829",
+   "slug": "agentic-portal",
+   "name": "Agentic Portal",
+   "party": "1P",
+   "via": null,
+   "host": "agent.pocket.network",
+   "domain": "pocket.network",
+   "category": "Compute",
+   "logo": "/logos/agentic-portal.svg",
+   "logo_source": "official",
+   "initials": "AG",
+   "badge": "not_delivered",
+   "badge_label": "届かなかった",
+   "endpoints": 3,
+   "bought": 3,
+   "as_described": 2,
+   "price_min": 0.005,
+   "delivered_without_payment": 0,
+   "not_bought_reason": null,
+   "tx": 3918,
+   "buyers": 54,
+   "item_ids": [
+    "u_b289feb1",
+    "2e1a28a1ba306029",
+    "56c6cdde7c5187ad"
+   ]
+  },
+  {
+   "operator": "payto:0x589a2314a2e05f45e40c4823da3ba58d421db3d8",
+   "slug": "x-pay",
+   "name": "X Pay",
+   "party": "1P",
+   "via": null,
+   "host": "api-xpay.com",
+   "domain": "api-xpay.com",
+   "category": "Data",
+   "logo": "/logos/x-pay.ico",
+   "logo_source": "domain",
+   "initials": "XP",
+   "badge": "not_delivered",
+   "badge_label": "届かなかった",
+   "endpoints": 3,
+   "bought": 3,
+   "as_described": 0,
+   "price_min": 0.005,
+   "delivered_without_payment": 0,
+   "not_bought_reason": null,
+   "tx": 2102,
+   "buyers": 15,
+   "item_ids": [
+    "f283020160f0386a",
+    "537fadaae3617cc5",
+    "1e6656bde358fcf2"
+   ]
+  },
+  {
+   "operator": "payto:bd2xs189uhhnxuebevf3jfxrg8zqgrvqztpqh8hgkceq",
+   "slug": "sniperx-fun",
+   "name": "sniperx.fun",
+   "party": "1P",
+   "via": null,
+   "host": "x402.sniperx.fun",
+   "domain": "sniperx.fun",
+   "category": "Trading",
+   "logo": "/logos/sniperx-fun.png",
+   "logo_source": "domain",
+   "initials": "SN",
+   "badge": "not_delivered",
+   "badge_label": "届かなかった",
+   "endpoints": 2,
+   "bought": 2,
+   "as_described": 0,
+   "price_min": 0.01,
+   "delivered_without_payment": 0,
+   "not_bought_reason": null,
+   "tx": 953,
+   "buyers": 15,
+   "item_ids": [
+    "5fd985c1543ebecb",
+    "813201224555dbc7"
+   ]
+  },
+  {
+   "operator": "payto:aqqnmfbwgzeoti85atvry8xypkrho7gamdx9zb3ceeka",
+   "slug": "blockrun",
+   "name": "BlockRun",
+   "party": "1P",
+   "via": null,
+   "host": "sol.blockrun.ai",
+   "domain": "blockrun.ai",
+   "category": "Compute",
+   "logo": "/logos/blockrun.png",
+   "logo_source": "official",
+   "initials": "BL",
+   "badge": "not_bought",
+   "badge_label": "未購入",
+   "endpoints": 3,
+   "bought": 0,
+   "as_described": 0,
+   "price_min": 0.001,
+   "delivered_without_payment": 0,
+   "not_bought_reason": "使い方の公開なし・入力が合わない",
+   "tx": 17884,
+   "buyers": 16,
+   "item_ids": [
+    "d8ef840924738136",
+    "d1a9d0b34a2f1783",
+    "175ffc1faf56814e"
+   ]
+  }
+ ],
+ "categories": [
+  {
+   "key": "as_described",
+   "label": "納品・説明どおり",
+   "definition": "送金が確認でき、200 で本文が届き、中身の確認（出力の型・空や誤りでない・入力の反映・鮮度・データの種類）にひとつも外れがない。",
+   "count": 46
+  },
+  {
+   "key": "not_as_described",
+   "label": "納品・説明と違う",
+   "definition": "送金が確認でき、200 で本文が届いたが、中身の確認のどれかに外れた（外れた確認と本文の先頭500文字を記録）。送金額が 402 の提示より多かった場合もここ。",
+   "count": 2
+  },
+  {
+   "key": "input_mismatch",
+   "label": "Probeの入力が合わなかった",
+   "definition": "支払う前に同じ要求を支払いなしで送ったら 402 以外（400 など）が返った。Probe 側の入力が売り手の受け付ける形に合っていないので、払っていない。",
+   "count": 9
+  },
+  {
+   "key": "paid_then_rejected",
+   "label": "受け付けない要求で先に決済した",
+   "definition": "支払いなしでは 402 を返したのに、支払うと 4xx（400・405 など）で断られ、送金だけが済んだ。要求の中身を確かめる前に決済している。",
+   "count": 2
+  },
+  {
+   "key": "paid_not_delivered",
+   "label": "正しい要求でも届かなかった",
+   "definition": "支払いなしでは 402 を返し、支払って送金が確認できたのに、5xx・タイムアウトなどで中身が届かなかった。",
+   "count": 3
+  },
+  {
+   "key": "delivered_without_payment",
+   "label": "送金なしで届いた",
+   "definition": "送金が見つからない（決済ヘッダもチェーン上にもない）のに 200 で本文が届いた。",
+   "count": 0
+  },
+  {
+   "key": "not_settled",
+   "label": "送金されず届かなかった",
+   "definition": "支払いを送ったが送金は起きず（決済の失敗・5xx・時間切れ・支払い後の 402）、中身も届かなかった。お金は動いていない。",
+   "count": 5
+  },
+  {
+   "key": "input_rejected_unpaid",
+   "label": "Probeの入力不足で断られた（送金なし）",
+   "definition": "支払いなしでは 402 が返ったので支払いを付けて送ったが、売り手が要求の中身を確かめて 4xx（400・404・422 など）で断り、送金は起きなかった。売り手が支払いの前に中身を確かめていないだけで、原因は Probe の入力不足とみなし、売り手の失敗には数えない。お金は動いていない。",
+   "count": 5
+  },
+  {
+   "key": "no_usage",
+   "label": "使い方が公開されていない",
+   "definition": "402 の定義・x402 Endpoint・Bazaar・売り手の llms.txt / OpenAPI / PAY.md のどこにも呼び方が無い、または必須項目の値が決められない。払っていない。",
+   "count": 5
+  },
+  {
+   "key": "over_price",
+   "label": "価格超過",
+   "definition": "402 の提示額が 1コールの上限 $0.01 を超えた。払っていない。",
+   "count": 2
+  },
+  {
+   "key": "not_bought",
+   "label": "買わなかった（残高・上限・対応外の支払い方法）",
+   "definition": "残高・7日の上限・USDC 以外や対応外の支払い方法のため、払っていない（その週は測っていない）。",
+   "count": 1
+  }
+ ],
+ "items": [
+  {
+   "id": "d8ef840924738136",
+   "operator": "BlockRun on Solana — pay-per-request AI, settled in USDC",
+   "operator_key": "payto:aqqnmfbwgzeoti85atvry8xypkrho7gamdx9zb3ceeka",
+   "host": "sol.blockrun.ai",
+   "url": "https://sol.blockrun.ai/api/v1/chat/completions",
+   "name": "AI chat completions API - pay per request with USDC on Solana",
+   "description": "AI chat completions API - pay per request with USDC on Solana",
+   "category": "compute",
+   "price_usd": 0.001,
+   "reasons": {
+    "listed_in": [
+     "most_called",
+     "other_provider"
+    ],
+    "operator_tx": 17884,
+    "operator_buyers": 16,
+    "operator_stats_source": "x402 Endpoint Most-called (x402scan)",
+    "endpoint_calls_30d": null,
+    "endpoint_payers_30d": null,
+    "endpoint_stats_source": "none: not in the Bazaar"
+   },
+   "last": {
+    "ts": "2026-11-16T13:09:14.857Z",
+    "date": "2026-11-16",
+    "category": "input_mismatch",
+    "category_label": "Probeの入力が合わなかった",
+    "reason": "HTTP 400 on POST, not 402",
+    "request": {
+     "method": "POST",
+     "url": "https://sol.blockrun.ai/api/v1/chat/completions",
+     "query": {},
+     "body": {
+      "model": "openai/gpt-4o",
+      "messages": [
+       {
+        "role": "string",
+        "content": "string"
+       }
+      ],
+      "max_tokens": 1,
+      "temperature": 1,
+      "stream": false
+     },
+     "source": "402",
+     "source_detail": "PAYMENT-REQUIRED extensions.bazaar",
+     "values": [
+      {
+       "in": "body",
+       "name": "model",
+       "value": "openai/gpt-4o",
+       "from": "schema example"
+      },
+      {
+       "in": "body",
+       "name": "messages",
+       "value": [
+        {
+         "role": "string",
+         "content": "string"
+        }
+       ],
+       "from": "definition example"
+      },
+      {
+       "in": "body",
+       "name": "max_tokens",
+       "value": 1,
+       "from": "definition example"
+      },
+      {
+       "in": "body",
+       "name": "temperature",
+       "value": 1,
+       "from": "definition example"
+      },
+      {
+       "in": "body",
+       "name": "stream",
+       "value": false,
+       "from": "definition example"
+      }
+     ]
+    },
+    "request_tried": [
+     "402: PAYMENT-REQUIRED extensions.bazaar",
+     "x402 Endpoint: HTTP 404"
+    ],
+    "http_status": 400,
+    "response_sha256": null,
+    "response_bytes": null,
+    "tx": null,
+    "chain": null,
+    "network": null,
+    "amount": null,
+    "onchain_ok": null,
+    "checks": null,
+    "body_head": null,
+    "error_body": "{\"error\":\"Invalid request body\",\"details\":[{\"code\":\"invalid_value\",\"values\":[\"system\",\"developer\",\"user\",\"assistant\",\"tool\",\"function\"],\"path\":[\"messages\",0,\"role\"],\"message\":\"Invalid option: expected one of \\\"system\\\"|\\\"developer\\\"|\\\"user\\\"|\\\"assistant\\\"|\\\"tool\\\"|\\\"function\\\"\"}]}",
+    "skipped": "HTTP 400 on POST, not 402"
+   }
+  },
+  {
+   "id": "d1a9d0b34a2f1783",
+   "operator": "BlockRun on Solana — pay-per-request AI, settled in USDC",
+   "operator_key": "payto:aqqnmfbwgzeoti85atvry8xypkrho7gamdx9zb3ceeka",
+   "host": "sol.blockrun.ai",
+   "url": "https://sol.blockrun.ai/api/v1/phone/lookup",
+   "name": "BlockRun on Solana — pay-per-request AI, settled in USDC",
+   "description": "Phone Carrier Lookup",
+   "category": "messaging",
+   "price_usd": 0.01,
+   "reasons": {
+    "listed_in": [
+     "most_called",
+     "other_provider"
+    ],
+    "operator_tx": 17884,
+    "operator_buyers": 16,
+    "operator_stats_source": "x402 Endpoint Most-called (x402scan)",
+    "endpoint_calls_30d": null,
+    "endpoint_payers_30d": null,
+    "endpoint_stats_source": "none: not in the Bazaar"
+   },
+   "last": {
+    "ts": "2026-11-16T13:09:15.063Z",
+    "date": "2026-11-16",
+    "category": "no_usage",
+    "category_label": "使い方が公開されていない",
+    "reason": "402: body phoneNumber: example is a placeholder and no representative value fits | x402 Endpoint: no definition | Bazaar: no definition | docs: no definition",
+    "request": null,
+    "request_tried": [
+     "402: PAYMENT-REQUIRED extensions.bazaar",
+     "x402 Endpoint: HTTP 404",
+     "402: body phoneNumber: example is a placeholder and no representative value fits",
+     "x402 Endpoint: no definition",
+     "Bazaar: no definition",
+     "docs: no definition"
+    ],
+    "http_status": null,
+    "response_sha256": null,
+    "response_bytes": null,
+    "tx": null,
+    "chain": null,
+    "network": null,
+    "amount": null,
+    "onchain_ok": null,
+    "checks": null,
+    "body_head": null,
+    "error_body": null,
+    "skipped": "no_usage: 402: body phoneNumber: example is a placeholder and no representative value fits | x402 Endpoint: no definition | Bazaar: no definition | docs: no definition"
+   }
+  },
+  {
+   "id": "175ffc1faf56814e",
+   "operator": "BlockRun on Solana — pay-per-request AI, settled in USDC",
+   "operator_key": "payto:aqqnmfbwgzeoti85atvry8xypkrho7gamdx9zb3ceeka",
+   "host": "sol.blockrun.ai",
+   "url": "https://sol.blockrun.ai/api/v1/phone/numbers/list",
+   "name": "BlockRun on Solana — pay-per-request AI, settled in USDC",
+   "description": "List wallet's active phone numbers",
+   "category": "messaging",
+   "price_usd": 0.001,
+   "reasons": {
+    "listed_in": [
+     "most_called",
+     "other_provider"
+    ],
+    "operator_tx": 17884,
+    "operator_buyers": 16,
+    "operator_stats_source": "x402 Endpoint Most-called (x402scan)",
+    "endpoint_calls_30d": null,
+    "endpoint_payers_30d": null,
+    "endpoint_stats_source": "none: not in the Bazaar"
+   },
+   "last": {
+    "ts": "2026-11-16T13:09:15.634Z",
+    "date": "2026-11-16",
+    "category": "no_usage",
+    "category_label": "使い方が公開されていない",
+    "reason": "402: no definition | x402 Endpoint: no definition | Bazaar: no definition | docs: POST with no body definition or example",
+    "request": null,
+    "request_tried": [
+     "402: 402 without an input definition",
+     "x402 Endpoint: HTTP 404",
+     "docs: https://sol.blockrun.ai/openapi.json",
+     "402: no definition",
+     "x402 Endpoint: no definition",
+     "Bazaar: no definition",
+     "docs: POST with no body definition or example"
+    ],
+    "http_status": null,
+    "response_sha256": null,
+    "response_bytes": null,
+    "tx": null,
+    "chain": null,
+    "network": null,
+    "amount": null,
+    "onchain_ok": null,
+    "checks": null,
+    "body_head": null,
+    "error_body": null,
+    "skipped": "no_usage: 402: no definition | x402 Endpoint: no definition | Bazaar: no definition | docs: POST with no body definition or example"
+   }
+  },
+  {
+   "id": "08f46a64fb0dc0bb",
+   "operator": "Claw402 — Payments for every API call",
+   "operator_key": "payto:0xa9dd7cc9cbf0e05551332209289f04be36bc2315",
+   "host": "claw402.ai",
+   "url": "https://claw402.ai/api/v1/ai/deepseek/models",
+   "name": "Claw402 — Payments for every API call",
+   "description": "List available DeepSeek V4 models",
+   "category": "messaging",
+   "price_usd": 0.002,
+   "reasons": {
+    "listed_in": [
+     "most_called"
+    ],
+    "operator_tx": 4425,
+    "operator_buyers": 33,
+    "operator_stats_source": "x402 Endpoint Most-called (x402scan)",
+    "endpoint_calls_30d": null,
+    "endpoint_payers_30d": null,
+    "endpoint_stats_source": "none: not in the Bazaar"
+   },
+   "last": {
+    "ts": "2026-11-16T13:09:16.588Z",
+    "date": "2026-11-16",
+    "category": "as_described",
+    "category_label": "納品・説明どおり",
+    "reason": "all checks passed or not applicable",
+    "request": {
+     "method": "GET",
+     "url": "https://claw402.ai/api/v1/ai/deepseek/models",
+     "query": {},
+     "body": null,
+     "source": "402",
+     "source_detail": "PAYMENT-REQUIRED extensions.bazaar",
+     "values": []
+    },
+    "request_tried": [
+     "402: PAYMENT-REQUIRED extensions.bazaar",
+     "x402 Endpoint: HTTP 404"
+    ],
+    "http_status": 200,
+    "response_sha256": "b4a502059eb2dafad6380e0a57b2debf31219ae859cba9f0e019d48ae473be2f",
+    "response_bytes": 802,
+    "tx": "0x53c6b0120dd56aa01f418cba5a5c7fa5a835aa7b8e697b972ba11c36e2ff9f7b",
+    "chain": "base",
+    "network": "eip155:8453",
+    "amount": "2000",
+    "onchain_ok": true,
+    "checks": [
+     {
+      "name": "output_schema",
+      "result": "not_checked",
+      "detail": "no output schema published"
+     },
+     {
+      "name": "not_empty",
+      "result": "pass",
+      "detail": "802 bytes"
+     },
+     {
+      "name": "input_reflected",
+      "result": "not_checked",
+      "detail": "no identifier-like input to look for"
+     },
+     {
+      "name": "freshness",
+      "result": "not_checked",
+      "detail": "the description states no update frequency"
+     },
+     {
+      "name": "data_kind",
+      "result": "pass",
+      "detail": "JSON as described"
+     }
+    ],
+    "body_head": null,
+    "error_body": null,
+    "skipped": null
+   }
+  },
+  {
+   "id": "ee0849497eb49caf",
+   "operator": "Claw402 — Payments for every API call",
+   "operator_key": "payto:0xa9dd7cc9cbf0e05551332209289f04be36bc2315",
+   "host": "claw402.ai",
+   "url": "https://claw402.ai/api/v1/ai/openai/chat/6-luna",
+   "name": "Claw402 — Payments for every API call",
+   "description": "GPT-6 Luna text chat; 1.05M context, full-request input rates double and output rates increase 1.5x above 272K input tokens; no tools or images on this endpoint",
+   "category": "messaging",
+   "price_usd": 0.002659,
+   "reasons": {
+    "listed_in": [
+     "most_called"
+    ],
+    "operator_tx": 4425,
+    "operator_buyers": 33,
+    "operator_stats_source": "x402 Endpoint Most-called (x402scan)",
+    "endpoint_calls_30d": null,
+    "endpoint_payers_30d": null,
+    "endpoint_stats_source": "none: not in the Bazaar"
+   },
+   "last": {
+    "ts": "2026-11-16T13:09:17.418Z",
+    "date": "2026-11-16",
+    "category": "not_bought",
+    "category_label": "買わなかった（残高・上限・対応外の支払い方法）",
+    "reason": "not paid: scheme upto (only exact is paid)",
+    "request": {
+     "method": "POST",
+     "url": "https://claw402.ai/api/v1/ai/openai/chat/6-luna",
+     "query": {},
+     "body": {
+      "messages": [
+       {
+        "role": "user",
+        "content": "Reply with the single word: hello"
+       }
+      ],
+      "model": "gpt-6-luna"
+     },
+     "source": "openapi",
+     "source_detail": "https://claw402.ai/openapi.json",
+     "values": [
+      {
+       "in": "body",
+       "name": "messages",
+       "value": [
+        {
+         "role": "user",
+         "content": "Reply with the single word: hello"
+        }
+       ],
+       "from": "representative"
+      },
+      {
+       "in": "body",
+       "name": "model",
+       "value": "gpt-6-luna",
+       "from": "schema default"
+      }
+     ]
+    },
+    "request_tried": [
+     "402: HTTP 404 without parameters",
+     "x402 Endpoint: HTTP 404",
+     "docs: https://claw402.ai/openapi.json"
+    ],
+    "http_status": null,
+    "response_sha256": null,
+    "response_bytes": null,
+    "tx": null,
+    "chain": "base",
+    "network": "eip155:8453",
+    "amount": "2666",
+    "onchain_ok": null,
+    "checks": null,
+    "body_head": null,
+    "error_body": null,
+    "skipped": "not paid: scheme upto (only exact is paid)"
+   }
+  },
+  {
+   "id": "b991061d53f7b1b5",
+   "operator": "Claw402 — Payments for every API call",
+   "operator_key": "payto:0xa9dd7cc9cbf0e05551332209289f04be36bc2315",
+   "host": "claw402.ai",
+   "url": "https://claw402.ai/api/v1/ai/openai/embeddings",
+   "name": "Claw402 — Payments for every API call",
+   "description": "Text embeddings with text-embedding-3-small; max 8192 token IDs or UTF-8 bytes per item, 16384 total per request",
+   "category": "messaging",
+   "price_usd": 0.002,
+   "reasons": {
+    "listed_in": [
+     "most_called"
+    ],
+    "operator_tx": 4425,
+    "operator_buyers": 33,
+    "operator_stats_source": "x402 Endpoint Most-called (x402scan)",
+    "endpoint_calls_30d": null,
+    "endpoint_payers_30d": null,
+    "endpoint_stats_source": "none: not in the Bazaar"
+   },
+   "last": {
+    "ts": "2026-11-16T13:09:21.568Z",
+    "date": "2026-11-16",
+    "category": "as_described",
+    "category_label": "納品・説明どおり",
+    "reason": "all checks passed or not applicable",
+    "request": {
+     "method": "POST",
+     "url": "https://claw402.ai/api/v1/ai/openai/embeddings",
+     "query": {},
+     "body": {
+      "input": "bitcoin"
+     },
+     "source": "openapi",
+     "source_detail": "https://claw402.ai/openapi.json",
+     "values": [
+      {
+       "in": "body",
+       "name": "input",
+       "value": "bitcoin",
+       "from": "representative"
+      }
+     ]
+    },
+    "request_tried": [
+     "402: HTTP 404 without parameters",
+     "x402 Endpoint: HTTP 404",
+     "docs: https://claw402.ai/openapi.json"
+    ],
+    "http_status": 200,
+    "response_sha256": "68ac1d4648f25b62de7d54e0ee7302e208ddf40423f28a6cbaa38f614a50ff3e",
+    "response_bytes": 29684,
+    "tx": "0x12b0e426efc96138f8270202287a30fd88a83b9fec821980e268efff81ebfba2",
+    "chain": "base",
+    "network": "eip155:8453",
+    "amount": "2000",
+    "onchain_ok": true,
+    "checks": [
+     {
+      "name": "output_schema",
+      "result": "not_checked",
+      "detail": "no output schema published"
+     },
+     {
+      "name": "not_empty",
+      "result": "pass",
+      "detail": "29684 bytes"
+     },
+     {
+      "name": "input_reflected",
+      "result": "not_checked",
+      "detail": "no identifier-like input to look for"
+     },
+     {
+      "name": "freshness",
+      "result": "not_checked",
+      "detail": "the description states no update frequency"
+     },
+     {
+      "name": "data_kind",
+      "result": "pass",
+      "detail": "JSON as described"
+     }
+    ],
+    "body_head": null,
+    "error_body": null,
+    "skipped": null
+   }
+  },
+  {
+   "id": "u_b289feb1",
+   "operator": "Agentic Portal - x402/MPP APIs | Pocket Network",
+   "operator_key": "payto:0xf732ea490c5766071785a2310523f7fa2cebb829",
+   "host": "agent.pocket.network",
+   "url": "https://agent.pocket.network/v1/meadow",
+   "name": "Pocket Network",
+   "description": "An agent-only messaging network. Agents register with an Ed25519 key and talk in public rooms and end-to-end encrypted private rooms and DMs. POST /v2/lookup finds agents by id, handle, name or query; POST /v2/rooms searches the public room directory by name or topic, no identity needed; POST /v2/sync publishes signed events. Auth rides in the body. Pay per request in USDC; no account, no API key.",
+   "category": null,
+   "price_usd": 0.005,
+   "reasons": {
+    "listed_in": [
+     "most_called"
+    ],
+    "operator_tx": 3918,
+    "operator_buyers": 54,
+    "operator_stats_source": "x402 Endpoint Most-called (x402scan)",
+    "endpoint_calls_30d": 17531,
+    "endpoint_payers_30d": 34,
+    "endpoint_stats_source": "CDP Bazaar quality (30 days)"
+   },
+   "last": {
+    "ts": "2026-11-16T13:10:47.370Z",
+    "date": "2026-11-16",
+    "category": "not_settled",
+    "category_label": "送金されず届かなかった",
+    "reason": "no transfer; HTTP 502",
+    "request": {
+     "method": "POST",
+     "url": "https://agent.pocket.network/v1/meadow",
+     "query": {},
+     "body": {
+      "handle": "qlaude#zbt2kfrg"
+     },
+     "source": "402",
+     "source_detail": "PAYMENT-REQUIRED extensions.bazaar",
+     "values": [
+      {
+       "in": "body",
+       "name": "handle",
+       "value": "qlaude#zbt2kfrg",
+       "from": "definition example"
+      }
+     ]
+    },
+    "request_tried": [
+     "402: PAYMENT-REQUIRED extensions.bazaar",
+     "x402 Endpoint: not in the x402 Endpoint catalog"
+    ],
+    "http_status": 502,
+    "response_sha256": "d5bbc6515d6c3755d304b064f3706be40b296f8d7d2a3a8e9305952a7e4b7323",
+    "response_bytes": 109,
+    "tx": null,
+    "chain": "base",
+    "network": "eip155:8453",
+    "amount": "5000",
+    "onchain_ok": false,
+    "checks": null,
+    "body_head": null,
+    "error_body": "{\"error\":{\"code\":\"UPSTREAM_ERROR\",\"message\":\"The access point could not serve this relay.\",\"retryable\":true}}",
+    "skipped": null
+   }
+  },
+  {
+   "id": "2e1a28a1ba306029",
+   "operator": "Agentic Portal - x402/MPP APIs | Pocket Network",
+   "operator_key": "payto:0xf732ea490c5766071785a2310523f7fa2cebb829",
+   "host": "agent.pocket.network",
+   "url": "https://agent.pocket.network/v1/prompt-injection-detect",
+   "name": "Agentic Portal - x402/MPP APIs | Pocket Network",
+   "description": "Classify agent-bound text for prompt injection: a safe, suspicious, or malicious verdict with the patterns that matched. POST /v1/prompt with {text} and get the classification as one JSON object. Deterministic per ruleset version. Pay per request in USDC; no account, no API key.",
+   "category": "compute",
+   "price_usd": 0.005,
+   "reasons": {
+    "listed_in": [
+     "most_called"
+    ],
+    "operator_tx": 3918,
+    "operator_buyers": 54,
+    "operator_stats_source": "x402 Endpoint Most-called (x402scan)",
+    "endpoint_calls_30d": 6249,
+    "endpoint_payers_30d": 23,
+    "endpoint_stats_source": "CDP Bazaar quality (30 days)"
+   },
+   "last": {
+    "ts": "2026-11-16T13:10:50.587Z",
+    "date": "2026-11-16",
+    "category": "as_described",
+    "category_label": "納品・説明どおり",
+    "reason": "all checks passed or not applicable",
+    "request": {
+     "method": "POST",
+     "url": "https://agent.pocket.network/v1/prompt-injection-detect",
+     "query": {},
+     "body": {
+      "text": "Please summarise this article in three bullet points."
+     },
+     "source": "402",
+     "source_detail": "PAYMENT-REQUIRED extensions.bazaar",
+     "values": [
+      {
+       "in": "body",
+       "name": "text",
+       "value": "Please summarise this article in three bullet points.",
+       "from": "definition example"
+      }
+     ]
+    },
+    "request_tried": [
+     "402: PAYMENT-REQUIRED extensions.bazaar",
+     "x402 Endpoint: HTTP 404"
+    ],
+    "http_status": 200,
+    "response_sha256": "b9439e834c05a9ae4742eefee220002becfba4eb3343f5aaf061a1c781cd597d",
+    "response_bytes": 439,
+    "tx": "0xbc6353b56d2e21360eb151ea61064aa1f64ef88bb2d2fc1be7731ca2fc3a58eb",
+    "chain": "base",
+    "network": "eip155:8453",
+    "amount": "5000",
+    "onchain_ok": true,
+    "checks": [
+     {
+      "name": "output_schema",
+      "result": "pass",
+      "detail": "required fields and types match"
+     },
+     {
+      "name": "not_empty",
+      "result": "pass",
+      "detail": "439 bytes"
+     },
+     {
+      "name": "input_reflected",
+      "result": "not_checked",
+      "detail": "no identifier-like input to look for"
+     },
+     {
+      "name": "freshness",
+      "result": "not_checked",
+      "detail": "the description states no update frequency"
+     },
+     {
+      "name": "data_kind",
+      "result": "pass",
+      "detail": "JSON as described"
+     }
+    ],
+    "body_head": null,
+    "error_body": null,
+    "skipped": null
+   }
+  },
+  {
+   "id": "56c6cdde7c5187ad",
+   "operator": "Agentic Portal - x402/MPP APIs | Pocket Network",
+   "operator_key": "payto:0xf732ea490c5766071785a2310523f7fa2cebb829",
+   "host": "agent.pocket.network",
+   "url": "https://agent.pocket.network/v1/agentsearch-web-search-v1",
+   "name": "Agentic Portal - x402/MPP APIs | Pocket Network",
+   "description": "Web search built for agents, served over Pocket Network: POST /v1/search with a query and an optional max_results, and get the results back as one JSON object. Results vary run to run, as web search does. GET /v1/version, /v1/health and /v1/capabilities describe the service. Pay per request in USDC; no account, no API key.",
+   "category": "messaging",
+   "price_usd": 0.005,
+   "reasons": {
+    "listed_in": [
+     "most_called"
+    ],
+    "operator_tx": 3918,
+    "operator_buyers": 54,
+    "operator_stats_source": "x402 Endpoint Most-called (x402scan)",
+    "endpoint_calls_30d": 6074,
+    "endpoint_payers_30d": 37,
+    "endpoint_stats_source": "CDP Bazaar quality (30 days)"
+   },
+   "last": {
+    "ts": "2026-11-16T13:10:54.344Z",
+    "date": "2026-11-16",
+    "category": "as_described",
+    "category_label": "納品・説明どおり",
+    "reason": "all checks passed or not applicable",
+    "request": {
+     "method": "POST",
+     "url": "https://agent.pocket.network/v1/agentsearch-web-search-v1",
+     "query": {},
+     "body": {
+      "query": "Pocket Network",
+      "max_results": 1
+     },
+     "source": "402",
+     "source_detail": "PAYMENT-REQUIRED extensions.bazaar",
+     "values": [
+      {
+       "in": "body",
+       "name": "query",
+       "value": "Pocket Network",
+       "from": "definition example"
+      },
+      {
+       "in": "body",
+       "name": "max_results",
+       "value": 1,
+       "from": "definition example"
+      }
+     ]
+    },
+    "request_tried": [
+     "402: PAYMENT-REQUIRED extensions.bazaar",
+     "x402 Endpoint: HTTP 404"
+    ],
+    "http_status": 200,
+    "response_sha256": "adf3bd1f8c839d10e26f9e31918a01289192a9949045bbd8a35006e7f7c2c80c",
+    "response_bytes": 683,
+    "tx": "0x90bd35c7197d510384e67c7681f593a77cad7e52ca91341f1f958cda5c1e78bf",
+    "chain": "base",
+    "network": "eip155:8453",
+    "amount": "5000",
+    "onchain_ok": true,
+    "checks": [
+     {
+      "name": "output_schema",
+      "result": "pass",
+      "detail": "required fields and types match"
+     },
+     {
+      "name": "not_empty",
+      "result": "pass",
+      "detail": "683 bytes"
+     },
+     {
+      "name": "input_reflected",
+      "result": "not_checked",
+      "detail": "no identifier-like input to look for"
+     },
+     {
+      "name": "freshness",
+      "result": "not_checked",
+      "detail": "the description states no update frequency"
+     },
+     {
+      "name": "data_kind",
+      "result": "pass",
+      "detail": "JSON as described"
+     }
+    ],
+    "body_head": null,
+    "error_body": null,
+    "skipped": null
+   }
+  },
+  {
+   "id": "f283020160f0386a",
+   "operator": "X Pay",
+   "operator_key": "payto:0x589a2314a2e05f45e40c4823da3ba58d421db3d8",
+   "host": "api-xpay.com",
+   "url": "https://www.api-xpay.com/x402/ping",
+   "name": "X Pay",
+   "description": "Health check ping",
+   "category": "data",
+   "price_usd": 0.005,
+   "reasons": {
+    "listed_in": [
+     "most_called"
+    ],
+    "operator_tx": 2102,
+    "operator_buyers": 15,
+    "operator_stats_source": "x402 Endpoint Most-called (x402scan)",
+    "endpoint_calls_30d": 5687,
+    "endpoint_payers_30d": 232,
+    "endpoint_stats_source": "CDP Bazaar quality (30 days)"
+   },
+   "last": {
+    "ts": "2026-11-16T13:10:23.731Z",
+    "date": "2026-11-16",
+    "category": "paid_not_delivered",
+    "category_label": "正しい要求でも届かなかった",
+    "reason": "transfer, then paid request: timeout",
+    "request": {
+     "method": "GET",
+     "url": "https://www.api-xpay.com/x402/ping",
+     "query": {},
+     "body": null,
+     "source": "402",
+     "source_detail": "PAYMENT-REQUIRED extensions.bazaar",
+     "values": []
+    },
+    "request_tried": [
+     "402: PAYMENT-REQUIRED extensions.bazaar",
+     "x402 Endpoint: no input definition in the entry"
+    ],
+    "http_status": null,
+    "response_sha256": null,
+    "response_bytes": 0,
+    "tx": "0x7f317b3aef4588662cf5ae44ea3647c366ff50c61e21efac5a495b015add79b4",
+    "chain": "base",
+    "network": "eip155:8453",
+    "amount": "5000",
+    "onchain_ok": true,
+    "checks": null,
+    "body_head": null,
+    "error_body": null,
+    "skipped": null
+   }
+  },
+  {
+   "id": "537fadaae3617cc5",
+   "operator": "X Pay",
+   "operator_key": "payto:0x589a2314a2e05f45e40c4823da3ba58d421db3d8",
+   "host": "api-xpay.com",
+   "url": "https://www.api-xpay.com/x402/payment",
+   "name": "X Pay",
+   "description": "Payment receipt with transaction details",
+   "category": "data",
+   "price_usd": 0.005,
+   "reasons": {
+    "listed_in": [
+     "most_called"
+    ],
+    "operator_tx": 2102,
+    "operator_buyers": 15,
+    "operator_stats_source": "x402 Endpoint Most-called (x402scan)",
+    "endpoint_calls_30d": 5656,
+    "endpoint_payers_30d": 220,
+    "endpoint_stats_source": "CDP Bazaar quality (30 days)"
+   },
+   "last": {
+    "ts": "2026-11-16T13:11:25.487Z",
+    "date": "2026-11-16",
+    "category": "paid_not_delivered",
+    "category_label": "正しい要求でも届かなかった",
+    "reason": "transfer, then paid request: timeout",
+    "request": {
+     "method": "GET",
+     "url": "https://www.api-xpay.com/x402/payment",
+     "query": {},
+     "body": null,
+     "source": "402",
+     "source_detail": "PAYMENT-REQUIRED extensions.bazaar",
+     "values": []
+    },
+    "request_tried": [
+     "402: PAYMENT-REQUIRED extensions.bazaar",
+     "x402 Endpoint: no input definition in the entry"
+    ],
+    "http_status": null,
+    "response_sha256": null,
+    "response_bytes": 0,
+    "tx": "0x578f489604186a119f4cfb98b93f93edc11972812c9d7098a809b2c63781ddc5",
+    "chain": "base",
+    "network": "eip155:8453",
+    "amount": "5000",
+    "onchain_ok": true,
+    "checks": null,
+    "body_head": null,
+    "error_body": null,
+    "skipped": null
+   }
+  },
+  {
+   "id": "1e6656bde358fcf2",
+   "operator": "X Pay",
+   "operator_key": "payto:0x589a2314a2e05f45e40c4823da3ba58d421db3d8",
+   "host": "api-xpay.com",
+   "url": "https://www.api-xpay.com/x402/quote",
+   "name": "X Pay",
+   "description": "Payment quote with amount, asset, and merchant wallet",
+   "category": "trading",
+   "price_usd": 0.005,
+   "reasons": {
+    "listed_in": [
+     "most_called"
+    ],
+    "operator_tx": 2102,
+    "operator_buyers": 15,
+    "operator_stats_source": "x402 Endpoint Most-called (x402scan)",
+    "endpoint_calls_30d": 5635,
+    "endpoint_payers_30d": 217,
+    "endpoint_stats_source": "CDP Bazaar quality (30 days)"
+   },
+   "last": {
+    "ts": "2026-11-16T13:12:27.110Z",
+    "date": "2026-11-16",
+    "category": "paid_not_delivered",
+    "category_label": "正しい要求でも届かなかった",
+    "reason": "transfer, then paid request: timeout",
+    "request": {
+     "method": "GET",
+     "url": "https://www.api-xpay.com/x402/quote",
+     "query": {},
+     "body": null,
+     "source": "402",
+     "source_detail": "PAYMENT-REQUIRED extensions.bazaar",
+     "values": []
+    },
+    "request_tried": [
+     "402: PAYMENT-REQUIRED extensions.bazaar",
+     "x402 Endpoint: no input definition in the entry"
+    ],
+    "http_status": null,
+    "response_sha256": null,
+    "response_bytes": 0,
+    "tx": "0x42abe89ec6cd19b9d0e1d3588d8500b949107f6d5739324040745b2ed964af86",
+    "chain": "base",
+    "network": "eip155:8453",
+    "amount": "5000",
+    "onchain_ok": true,
+    "checks": null,
+    "body_head": null,
+    "error_body": null,
+    "skipped": null
+   }
+  },
+  {
+   "id": "5fd985c1543ebecb",
+   "operator": "SniperX•x402 super AI agent for sniping Alpha and Newpair on solana",
+   "operator_key": "payto:bd2xs189uhhnxuebevf3jfxrg8zqgrvqztpqh8hgkceq",
+   "host": "x402.sniperx.fun",
+   "url": "https://x402.sniperx.fun/api/v1/token/holders_amount",
+   "name": "SniperX•x402 super AI agent for sniping Alpha and Newpair on solana",
+   "description": "Get real-time token holder count",
+   "category": "compute",
+   "price_usd": 0.01,
+   "reasons": {
+    "listed_in": [
+     "most_called"
+    ],
+    "operator_tx": 953,
+    "operator_buyers": 15,
+    "operator_stats_source": "x402 Endpoint Most-called (x402scan)",
+    "endpoint_calls_30d": 31,
+    "endpoint_payers_30d": 3,
+    "endpoint_stats_source": "CDP Bazaar quality (30 days)"
+   },
+   "last": {
+    "ts": "2026-11-16T13:11:00.685Z",
+    "date": "2026-11-16",
+    "category": "paid_then_rejected",
+    "category_label": "受け付けない要求で先に決済した",
+    "reason": "transfer, then HTTP 404",
+    "request": {
+     "method": "GET",
+     "url": "https://x402.sniperx.fun/api/v1/token/holders_amount?token_address=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+     "query": {
+      "token_address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+     },
+     "body": null,
+     "source": "402",
+     "source_detail": "PAYMENT-REQUIRED extensions.bazaar",
+     "values": [
+      {
+       "in": "query",
+       "name": "token_address",
+       "value": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+       "from": "representative"
+      }
+     ]
+    },
+    "request_tried": [
+     "402: PAYMENT-REQUIRED extensions.bazaar",
+     "x402 Endpoint: HTTP 404"
+    ],
+    "http_status": 404,
+    "response_sha256": "c2709697a84c61bd05cad1fc51b2aa617d57ade5a81c9cd8598bd6db2ded7638",
+    "response_bytes": 27,
+    "tx": "3pqcvkjvui6CeSP2tM6AyaANx2haczuSMCEZC8pTfkmPk1ZNBVUMubnpHzxSf9fz9obt8UF7vUA8PvBfyD4LtidT",
+    "chain": "solana",
+    "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+    "amount": "10000",
+    "onchain_ok": true,
+    "checks": null,
+    "body_head": null,
+    "error_body": "{\"error\":\"Token not found\"}",
+    "skipped": null
+   }
+  },
+  {
+   "id": "813201224555dbc7",
+   "operator": "SniperX•x402 super AI agent for sniping Alpha and Newpair on solana",
+   "operator_key": "payto:bd2xs189uhhnxuebevf3jfxrg8zqgrvqztpqh8hgkceq",
+   "host": "x402.sniperx.fun",
+   "url": "https://x402.sniperx.fun/api/v1/token/price",
+   "name": "SniperX•x402 super AI agent for sniping Alpha and Newpair on solana",
+   "description": "Get real-time token price and change rates (5min, 10min, 30min, 1hour, 24hour)",
+   "category": "compute",
+   "price_usd": 0.01,
+   "reasons": {
+    "listed_in": [
+     "most_called"
+    ],
+    "operator_tx": 953,
+    "operator_buyers": 15,
+    "operator_stats_source": "x402 Endpoint Most-called (x402scan)",
+    "endpoint_calls_30d": 29,
+    "endpoint_payers_30d": 2,
+    "endpoint_stats_source": "CDP Bazaar quality (30 days)"
+   },
+   "last": {
+    "ts": "2026-11-16T13:11:03.639Z",
+    "date": "2026-11-16",
+    "category": "paid_then_rejected",
+    "category_label": "受け付けない要求で先に決済した",
+    "reason": "transfer, then HTTP 404",
+    "request": {
+     "method": "GET",
+     "url": "https://x402.sniperx.fun/api/v1/token/price?token_address=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+     "query": {
+      "token_address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+     },
+     "body": null,
+     "source": "402",
+     "source_detail": "PAYMENT-REQUIRED extensions.bazaar",
+     "values": [
+      {
+       "in": "query",
+       "name": "token_address",
+       "value": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+       "from": "representative"
+      }
+     ]
+    },
+    "request_tried": [
+     "402: PAYMENT-REQUIRED extensions.bazaar",
+     "x402 Endpoint: HTTP 404"
+    ],
+    "http_status": 404,
+    "response_sha256": "c2709697a84c61bd05cad1fc51b2aa617d57ade5a81c9cd8598bd6db2ded7638",
+    "response_bytes": 27,
+    "tx": "3knoZyjRNCSwuUEqugfi2WWkPRQC2xpXJLVjhJKDkoh3T7xJLED7gCwVRrNosW35BRwocNk7v4Sg4SSLhPwfS9V3",
+    "chain": "solana",
+    "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+    "amount": "10000",
+    "onchain_ok": true,
+    "checks": null,
+    "body_head": null,
+    "error_body": "{\"error\":\"Token not found\"}",
+    "skipped": null
+   }
+  }
+ ],
+ "legacy_not_delivered": [
+  {
+   "date": "2026-10-19",
+   "not_delivered": 1,
+   "by_category": [
+    {
+     "key": "paid_then_rejected",
+     "label": "受け付けない要求で先に決済した",
+     "count": 1
+    }
+   ],
+   "rows": [
+    {
+     "host": "x402.sniperx.fun",
+     "url": "https://x402.sniperx.fun/api/v1/token/price",
+     "http_status": 400,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 400"
+    }
+   ]
+  },
+  {
+   "date": "2026-11-02",
+   "not_delivered": 23,
+   "by_category": [
+    {
+     "key": "paid_not_delivered",
+     "label": "正しい要求でも届かなかった",
+     "count": 9
+    },
+    {
+     "key": "paid_then_rejected",
+     "label": "受け付けない要求で先に決済した",
+     "count": 14
+    }
+   ],
+   "rows": [
+    {
+     "host": "api-xpay.com",
+     "url": "https://www.api-xpay.com/x402/ip",
+     "http_status": null,
+     "category": "正しい要求でも届かなかった",
+     "reason": "transfer, then paid request: timeout"
+    },
+    {
+     "host": "contextslim.friczero.com",
+     "url": "https://contextslim.friczero.com/fetch",
+     "http_status": 400,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 400"
+    },
+    {
+     "host": "money-reactor.makar52nn2016.workers.dev",
+     "url": "https://money-reactor.makar52nn2016.workers.dev/api/time",
+     "http_status": 503,
+     "category": "正しい要求でも届かなかった",
+     "reason": "transfer, then HTTP 503"
+    },
+    {
+     "host": "token-api.x402hub.xyz",
+     "url": "https://token-api.x402hub.xyz/api/transfers/evm",
+     "http_status": 500,
+     "category": "正しい要求でも届かなかった",
+     "reason": "transfer, then HTTP 500"
+    },
+    {
+     "host": "johncross-data-api.johncrossugwuegede.workers.dev",
+     "url": "https://johncross-data-api.johncrossugwuegede.workers.dev/scrape",
+     "http_status": 400,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 400"
+    },
+    {
+     "host": "rest.coincap.io",
+     "url": "https://rest.coincap.io/v3/agentFriendly/full_assets_by_slug",
+     "http_status": 400,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 400"
+    },
+    {
+     "host": "206-81-14-131.sslip.io",
+     "url": "https://206-81-14-131.sslip.io/svc/agent-services/validate",
+     "http_status": 400,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 400"
+    },
+    {
+     "host": "x402-agent-toolkit.vercel.app",
+     "url": "https://x402-agent-toolkit.vercel.app/api/text-stats",
+     "http_status": 405,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 405"
+    },
+    {
+     "host": "x402-data-hub.vercel.app",
+     "url": "https://x402-data-hub.vercel.app/api/crypto/coins",
+     "http_status": 405,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 405"
+    },
+    {
+     "host": "agentread.midi-thumb.workers.dev",
+     "url": "https://agentread.midi-thumb.workers.dev/diff",
+     "http_status": 402,
+     "category": "正しい要求でも届かなかった",
+     "reason": "transfer, then HTTP 402"
+    },
+    {
+     "host": "anthropic.yeetful.com",
+     "url": "https://anthropic.yeetful.com/api/mcp/mcp",
+     "http_status": 405,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 405"
+    },
+    {
+     "host": "api.nullclear.dev",
+     "url": "https://api.nullclear.dev/v1/bazaar/audit",
+     "http_status": 402,
+     "category": "正しい要求でも届かなかった",
+     "reason": "transfer, then HTTP 402"
+    },
+    {
+     "host": "ethglobalskills-x402.vercel.app",
+     "url": "https://ethglobalskills-x402.vercel.app/api/events",
+     "http_status": 405,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 405"
+    },
+    {
+     "host": "dns-lookup.hsharmanov02.workers.dev",
+     "url": "https://dns-lookup.hsharmanov02.workers.dev/dns",
+     "http_status": 400,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 400"
+    },
+    {
+     "host": "gsearch.jojapi.net",
+     "url": "https://gsearch.jojapi.net/v1",
+     "http_status": 400,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 400"
+    },
+    {
+     "host": "job-bus.3dforge-qk.workers.dev",
+     "url": "https://job-bus.3dforge-qk.workers.dev/locks",
+     "http_status": 400,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 400"
+    },
+    {
+     "host": "http-headers.hsharmanov02.workers.dev",
+     "url": "https://http-headers.hsharmanov02.workers.dev/headers",
+     "http_status": 400,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 400"
+    },
+    {
+     "host": "market.compalyze.co.jp",
+     "url": "https://market.compalyze.co.jp/x402/v2/companies/search",
+     "http_status": 400,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 400"
+    },
+    {
+     "host": "ip-geo.hsharmanov02.workers.dev",
+     "url": "https://ip-geo.hsharmanov02.workers.dev/geo",
+     "http_status": 400,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 400"
+    },
+    {
+     "host": "polymarketeer.vercel.app",
+     "url": "https://polymarketeer.vercel.app/api/x402/polymarket/tags",
+     "http_status": null,
+     "category": "正しい要求でも届かなかった",
+     "reason": "transfer, then paid request: terminated (Z_DATA_ERROR)"
+    },
+    {
+     "host": "pulse.theaslangroupllc.com",
+     "url": "https://pulse.theaslangroupllc.com/api/blueprint",
+     "http_status": 402,
+     "category": "正しい要求でも届かなかった",
+     "reason": "transfer, then HTTP 402"
+    },
+    {
+     "host": "rng.sociologic.ai",
+     "url": "https://rng.sociologic.ai/uuid",
+     "http_status": 402,
+     "category": "正しい要求でも届かなかった",
+     "reason": "transfer, then HTTP 402"
+    },
+    {
+     "host": "stockbloc.ai.studio",
+     "url": "https://stockbloc.ai.studio/api/data/market",
+     "http_status": 402,
+     "category": "正しい要求でも届かなかった",
+     "reason": "transfer, then HTTP 402"
+    }
+   ]
+  },
+  {
+   "date": "2026-11-07",
+   "not_delivered": 9,
+   "by_category": [
+    {
+     "key": "paid_then_rejected",
+     "label": "受け付けない要求で先に決済した",
+     "count": 8
+    },
+    {
+     "key": "paid_not_delivered",
+     "label": "正しい要求でも届かなかった",
+     "count": 1
+    }
+   ],
+   "rows": [
+    {
+     "host": "rdap.hsharmanov02.workers.dev",
+     "url": "https://rdap.hsharmanov02.workers.dev/age",
+     "http_status": 400,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 400"
+    },
+    {
+     "host": "test-orpin-phi-32.vercel.app",
+     "url": "https://test-orpin-phi-32.vercel.app/api/events",
+     "http_status": 405,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 405"
+    },
+    {
+     "host": "stack-intel.hsharmanov02.workers.dev",
+     "url": "https://stack-intel.hsharmanov02.workers.dev/intel",
+     "http_status": 400,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 400"
+    },
+    {
+     "host": "verifik.x402.paysponge.com",
+     "url": "https://verifik.x402.paysponge.com/v2/communication/email",
+     "http_status": 403,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 403"
+    },
+    {
+     "host": "vweatherstation.com",
+     "url": "https://vweatherstation.com/api/v1/routes",
+     "http_status": 400,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 400"
+    },
+    {
+     "host": "x402-ai-gateway-rosy.vercel.app",
+     "url": "https://x402-ai-gateway-rosy.vercel.app/api/sentiment",
+     "http_status": 405,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 405"
+    },
+    {
+     "host": "x402-etf-macro-intelligence.vercel.app",
+     "url": "https://x402-etf-macro-intelligence.vercel.app/api/bea/gdp",
+     "http_status": 503,
+     "category": "正しい要求でも届かなかった",
+     "reason": "transfer, then HTTP 503"
+    },
+    {
+     "host": "x402-ai.pages.dev",
+     "url": "https://x402-ai.pages.dev/service/chat",
+     "http_status": 400,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 400"
+    },
+    {
+     "host": "xplace.dev",
+     "url": "https://www.xplace.dev/api/place",
+     "http_status": 405,
+     "category": "受け付けない要求で先に決済した",
+     "reason": "transfer, then HTTP 405"
+    }
+   ]
+  }
+ ],
+ "own_sellers": [
+  {
+   "target": "JIN",
+   "host": "jin.x402jp.com",
+   "date": "2026-11-16",
+   "url": "https://jin.x402jp.com/api/jin/series",
+   "category": "納品・説明どおり",
+   "reason": "delivered (content not checked: bought before the checks existed)",
+   "http_status": 200,
+   "tx": "3WBYsUvRnp4H6YxSrbPYNLSxnnz3CrLF7gjJCmvgoUfD6Q5UJe7zKxUb2pGJKTDGb1n9Sz7QkWox6wNgNciBcHNN",
+   "chain": "solana",
+   "response_sha256": "2a70a806cefd0a383d76702796b993c5f3add52abe8b4a8170e66b0eb92dce67",
+   "receipt_ok": true
+  },
+  {
+   "target": "OSD",
+   "host": "osd.x402jp.com",
+   "date": "2026-11-16",
+   "url": "https://osd.x402jp.com/api/alpha/portfolio/current",
+   "category": "納品・説明どおり",
+   "reason": "delivered (content not checked: bought before the checks existed)",
+   "http_status": 200,
+   "tx": "YqLkF5fetP4VNUF4hwmAKPWkK61DSgmTibmcHeig8MAkrk4n79PTstwK6QgakMP3rn6oA3w2TV6b4D39FoAiKhv",
+   "chain": "solana",
+   "response_sha256": "76ffa580b92a74d2a4cdc258352c9904411713ea01f69773e7e21909975e9484",
+   "receipt_ok": true
+  }
+ ]
+}

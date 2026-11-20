@@ -1,0 +1,14 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "x402-security-check",
+  "version": "0.1.0",
+  "description": "x402 Security Check: a skill that checks an x402 seller's API server code on 11 items, with read-only MCP tools for SDK advisories, the live 402, facilitator signers, Seller Probe records and the 25 x402 issues.",
+  "author": {
+    "name": "x402 Inc.",
+    "url": "https://github.com/kato9292929"
+  },
+  "homepage": "https://github.com/kato9292929/x402-security-check#readme",
+  "repository": "https://github.com/kato9292929/x402-security-check",
+  "license": "MIT",
+  "keywords": ["x402", "security", "audit", "seller", "mcp"]
+}

@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22]
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci
+      - run: npm run verify
+
+  risk-paths:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: List changed risk paths in the job summary
+        run: |
+          out="$(scripts/risk-paths.sh "origin/${{ github.base_ref }}")"
+          if [ -n "$out" ]; then
+            { echo "### Risk paths changed — a person reviews these before merge"; echo; echo '```'; echo "$out"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+            echo "::notice title=Risk paths changed::$(echo "$out" | cut -f1 | tr '\n' ' ')"
+          else
+            echo "No risk paths changed." >> "$GITHUB_STEP_SUMMARY"
+          fi

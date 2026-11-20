@@ -1,0 +1,20 @@
+{
+  "name": "x402-security-check",
+  "displayName": "x402 Security Check",
+  "description": "Checks an x402 seller's API server code on 11 items (402 contents, payment order, facilitator results, SDK advisories, ...). The skill reads the code; read-only MCP tools add evidence: SDK advisories in lockfiles, the live 402 and the token's EIP-712 domain, facilitator signers, Seller Probe purchase records, and the 25 x402 issues.",
+  "version": "0.1.0",
+  "author": {
+    "name": "x402 Inc."
+  },
+  "homepage": "https://github.com/kato9292929/x402-security-check",
+  "repository": "https://github.com/kato9292929/x402-security-check",
+  "license": "MIT",
+  "keywords": [
+    "x402",
+    "security",
+    "audit",
+    "seller",
+    "payments",
+    "usdc"
+  ]
+}

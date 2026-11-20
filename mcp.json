@@ -1,0 +1,10 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "x402-security-check": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "x402-security-check-mcp@0.1.0"]
+    }
+  }
+}

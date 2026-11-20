@@ -1,0 +1,182 @@
+# x402 Security Check
+
+x402 の per-call 決済を受け付ける API サーバー（seller）のコードを、402 の中身・決済の順序・facilitator の結果・SDK など11項目に絞って点検する Claude Code プラグイン。
+
+```bash
+claude plugin marketplace add kato9292929/x402-wallet-mcp
+```
+
+```bash
+claude plugin install x402-security-check@x402inc
+```
+
+マーケットプレイス `x402inc` は AgentPay402 MCP（[kato9292929/x402-wallet-mcp](https://github.com/kato9292929/x402-wallet-mcp)）と共通。Claude Code の中では `/plugin marketplace add kato9292929/x402-wallet-mcp` と `/plugin install x402-security-check@x402inc` でも同じ。インストール後、新しいセッションを始める。Node.js 20 以上と npm が PATH にあること（Claude Code がインストール時に `package-lock.json` から依存を入れる）。設定項目や API キーはない。
+
+更新：`claude plugin marketplace update x402inc`。インストールせずに試す：`claude --plugin-dir /path/to/x402-security-check`。
+
+## 何が入っているか
+
+| 部分 | 役割 |
+| - | - |
+| スキル `x402-security-check`（`skills/x402-security-check/SKILL.md`） | コードを読んで判断する。11項目の手順、重大度の基準、出力の形を持つ。「セキュリティチェック」「x402 の点検」と頼むか、`/x402-security-check` で呼ぶ。指定がなければ `git diff main...HEAD` を、「全体」と言えばリポジトリ全体を見る |
+| MCP サーバー `x402-security-check`（`server/`） | 決まった手順で判定できる確認だけをツールにしたもの。スキルはツールがあれば根拠に足し、無ければコードと設定だけで判定する |
+
+点検の対象は seller の API サーバー側（HTTP ハンドラ、x402 のミドルウェア設定、CDN・ホスティングの設定、依存関係）。トークンのコントラクトと buyer 側のコードは対象外。
+
+## MCP のツール
+
+すべて読むだけ。支払い・署名はしない。秘密鍵・ウォレットの認証情報は受け取らず、持たない。
+
+| ツール | 入力 | 返すもの | 項目 |
+| - | - | - | - |
+| `check_sdk_advisories` | リポジトリのパス | lockfile（`package-lock.json`・`pnpm-lock.yaml`・`yarn.lock`・`requirements*.txt`・`poetry.lock`・`uv.lock`・`Pipfile.lock`・`go.sum`）にある x402 SDK の版と、`data/advisories.json` の修正版より古いものの一覧。lockfile のファイル名・行番号・該当行も返す | 10 |
+| `inspect_402` | URL、メソッド（GET・HEAD・POST）、本文（任意）、掲載価格（任意） | 支払いヘッダを付けずに叩いたときのステータスと、`PAYMENT-REQUIRED`（v1 は本文）の中身。各 `accepts` について、amount の単位換算、asset のコントラクトから公開 RPC で読んだ EIP-712 ドメイン（name・version、あれば `DOMAIN_SEPARATOR` も再計算して照合）との一致、network と asset の組み合わせ、入力の定義の有無。402 以外（200・401・404 など）はそのまま返す | 2 |
+| `get_facilitator_signers` | facilitator の URL | `/supported` が返す署名者の一覧（`eip155:*`・`solana:*` など）、Solana の fee payer、対応する kind | 8 |
+| `lookup_probe` | ホスト名（または URL） | [Seller Probe](https://probe.x402jp.com) の公開データ（`/data/curated.json`）のうち、そのホストの購入結果（送ったリクエスト・ステータス・tx・チェーン上の確認・判定）と、その判定がどの項目の根拠になるか | 1・3・9 |
+| `list_issues` | なし | `data/issues.json`（25件の課題 ID・内容・段階・誰が損をするか・11項目との対応） | 全体 |
+
+通信するのは次だけ。
+
+- `inspect_402`：引数の URL への1回のリクエスト（リダイレクトは追わない）。`PAYMENT-SIGNATURE`・`X-PAYMENT`・`Authorization`・Cookie は付けない。EVM の asset について、公開 RPC への `eth_call`（`name()`・`version()`・`decimals()`・`eip712Domain()`・`DOMAIN_SEPARATOR()`）。RPC は `server/src/chains.ts` の一覧で、`X402SC_RPC_URL_<chain id>`（例 `X402SC_RPC_URL_8453`）で差し替えられる
+- `get_facilitator_signers`：`<facilitator>/supported` への GET
+- `lookup_probe`：`https://probe.x402jp.com/data/curated.json` への GET（`X402SC_PROBE_DATA_URL` で差し替え可）
+- `check_sdk_advisories`・`list_issues`：通信しない（ローカルのファイルだけ）
+
+### 実行例：testnet の公開エンドポイントに `inspect_402`
+
+2026-11-20、Base Sepolia の公開デモ seller（AgentPay402 MCP の結合テストで使ったもの）に対して、MCP の stdio 経由で実行した結果。支払いヘッダは送っていない。`PAYMENT-REQUIRED` の生の中身と説明文は省略した。
+
+```json
+{"name":"inspect_402","arguments":{"url":"https://wallets-demo-seller-server.calebgcarithers.workers.dev/weather?location=Tokyo","listed_price":"0.001"}}
+```
+
+```json
+{
+  "url": "https://wallets-demo-seller-server.calebgcarithers.workers.dev/weather?location=Tokyo",
+  "method": "GET",
+  "status": 402,
+  "headers": {
+    "content-type": "application/json",
+    "payment-required": "(base64, 2920 chars; decoded in payment_required.raw)"
+  },
+  "body_head": "{}",
+  "body_truncated": false,
+  "sent_payment_header": false,
+  "is_402": true,
+  "payment_required": {
+    "source": "header",
+    "x402Version": 2,
+    "error": "Payment required",
+    "resource": {
+      "url": "https://wallets-demo-seller-server.calebgcarithers.workers.dev/weather?location=Tokyo",
+      "description": "Real-time current weather conditions ..."
+    },
+    "extensions": [
+      "bazaar"
+    ],
+    "raw": "(PAYMENT-REQUIRED を復号したもの。省略)"
+  },
+  "accepts": [
+    {
+      "index": 0,
+      "scheme": "exact",
+      "network": "eip155:84532",
+      "network_caip2": "eip155:84532",
+      "network_name": "Base Sepolia",
+      "testnet": true,
+      "asset": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+      "asset_check": {
+        "known": true,
+        "symbol": "USDC",
+        "decimals": 6
+      },
+      "amount": "1000",
+      "amount_human": "0.001",
+      "unit": "USDC",
+      "payTo": "0xCBd4E4218B2Cd8300f1bd07b9B4B720fAb6B51B3",
+      "maxTimeoutSeconds": 300,
+      "extra": {
+        "name": "USDC",
+        "version": "2"
+      },
+      "eip712": {
+        "declared": {
+          "name": "USDC",
+          "version": "2"
+        },
+        "onchain": {
+          "name": "USDC",
+          "version": "2",
+          "version_source": "name/version",
+          "decimals": 6,
+          "domain_separator": "0x71f17a3b2ff373b803d70a5a07c046c1a2bc8e89c09ef722fcb047abe94c9818",
+          "read_with": "name/version",
+          "rpc": "sepolia.base.org"
+        },
+        "match": {
+          "name": true,
+          "version": true,
+          "domain_separator": true
+        }
+      }
+    }
+  ],
+  "input_definition": {
+    "present": true,
+    "where": [
+      "extensions.bazaar.info.input",
+      "extensions.bazaar.schema"
+    ],
+    "input": {
+      "type": "http",
+      "queryParams": {
+        "location": "San Francisco"
+      },
+      "method": "GET"
+    }
+  },
+  "findings": [
+    {
+      "level": "info",
+      "item": 2,
+      "code": "testnet",
+      "message": "network is a testnet (Base Sepolia). Fine for staging; production should use a mainnet.",
+      "accepts_index": 0
+    }
+  ]
+}
+```
+
+`extra.name`・`extra.version`（`USDC`・`2`）は、Base Sepolia の USDC コントラクトから `sepolia.base.org` で読んだ値と一致し、`DOMAIN_SEPARATOR()` も再計算と一致した。amount `1000` は 0.001 USDC で、掲載価格 0.001 と一致。指摘は testnet であることの info だけ。
+
+## MCP が無いとき
+
+スキルだけで点検は最後まで動く。SKILL.md の手順はコードと設定を読んで判定する形で書かれていて、ツールは「使えるときは根拠に足す」扱い。例えば項目10はツールが無ければ lockfile を直接読み、項目2は 402 を返すコードと設定を読む。
+
+## データ
+
+- `data/advisories.json`：x402 SDK の公開アドバイザリと修正版。手で更新する。最初は [GHSA-qr2g-p6q7-w82m](https://github.com/advisories/GHSA-qr2g-p6q7-w82m)（Solana 支払いの検証の欠陥。修正版：npm `@x402/svm` 2.6.0、PyPI `x402` 2.3.0、Go `github.com/coinbase/x402/go` 2.5.0）。
+  - `npm run update-advisories`（`-- --dry-run` で書き込まない）が GitHub Advisory Database の公開 API（`GET https://api.github.com/advisories?ecosystem=...&affects=...`、キー不要、エコシステムごとに1回）から x402 関連を取り直し、まだ無い ID だけを足す。既存の項目は書き換えない。足された項目の summary・issue・item を見直してからコミットする。キー無しの上限は IP あたり60回/時。
+- `data/issues.json`：[x402 per-call APIの実装上の脆弱性 サマリー](https://note.com/x402inc/n/nb2221395494a) の25件（B1〜B7、S1〜S9、F1〜F4、K1〜K3、C1〜C2）と、スキルの11項目との対応。buyer 側・市場全体の課題（B1〜B5・B7、S3、S4、F4、C1、C2）は seller のコードの点検範囲の外なので、どの項目にも対応させていない。
+
+## npm・他の MCP クライアント
+
+同じサーバーを stdio の MCP サーバーとして単体でも使える：`npx -y x402-security-check-mcp`（npm `x402-security-check-mcp`、MCP Registry `io.github.kato9292929/x402-security-check-mcp`）。リポジトリのルートには [Agent Plugins 1.0](https://agent-plugins.org/specification) の `plugin.json`・`mcp.json` もあり、こちらは `npx -y x402-security-check-mcp@<version>` で起動する。
+
+## 開発
+
+```bash
+npm ci
+```
+
+```bash
+npm run verify
+```
+
+`npm run verify` が型検査・`server/dist` の一致・テスト・版の一致・`claude plugin validate`・risk-paths の一覧をまとめて回す（CI も同じ）。テストはネットワークに出ず、402 を返す seller・JSON-RPC・facilitator・Seller Probe はローカルのモックで確かめる。作業のきまりは [CLAUDE.md](CLAUDE.md)。
+
+リリース：`package.json`・`server.json`（2か所）・`.claude-plugin/plugin.json`・`plugin.json`・`mcp.json` の版・`server/src/version.ts` をそろえて main にマージすると、Publish ワークフローが npm（Trusted publishing）と MCP Registry に公開し、`v<version>` のタグを付ける。
+
+## ライセンス
+
+MIT

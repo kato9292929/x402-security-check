@@ -1,0 +1,62 @@
+{
+  "name": "x402-security-check-mcp",
+  "version": "0.1.0",
+  "mcpName": "io.github.kato9292929/x402-security-check-mcp",
+  "description": "x402 Security Check MCP: read-only tools for checking an x402 seller (SDK advisories, live 402 inspection, facilitator signers, Seller Probe records, the 25 x402 issues).",
+  "type": "module",
+  "bin": {
+    "x402-security-check-mcp": "server/dist/index.js"
+  },
+  "files": [
+    "server/dist",
+    "data",
+    "README.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json --noEmit",
+    "test": "vitest run",
+    "verify": "bash scripts/verify.sh",
+    "update-advisories": "tsx scripts/update-advisories.ts",
+    "start": "node server/dist/index.js",
+    "dev": "tsx server/src/index.ts",
+    "prepublishOnly": "npm run build",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kato9292929/x402-security-check.git"
+  },
+  "keywords": [
+    "x402",
+    "security",
+    "audit",
+    "mcp",
+    "model-context-protocol",
+    "claude-code",
+    "usdc",
+    "payments"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/kato9292929/x402-security-check#readme",
+  "bugs": {
+    "url": "https://github.com/kato9292929/x402-security-check/issues"
+  },
+  "author": "x402 Inc.",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "@noble/hashes": "^2.4.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^5.1.1"
+  }
+}

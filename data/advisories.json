@@ -1,0 +1,30 @@
+{
+  "updated": "2026-11-20",
+  "note": "Edited by hand. scripts/update-advisories.ts adds x402 advisories from the GitHub Advisory Database; entries already here are kept.",
+  "sdk_packages": {
+    "npm": [
+      "@x402/core", "@x402/evm", "@x402/svm", "@x402/fetch", "@x402/axios", "@x402/express",
+      "@x402/next", "@x402/hono", "@x402/extensions", "@x402/paywall",
+      "x402", "x402-fetch", "x402-axios", "x402-express", "x402-next", "x402-hono"
+    ],
+    "pip": ["x402"],
+    "go": ["github.com/coinbase/x402/go", "github.com/x402-foundation/x402/go"]
+  },
+  "advisories": [
+    {
+      "id": "GHSA-qr2g-p6q7-w82m",
+      "cve": null,
+      "severity": "high",
+      "summary": "Solana payment verification flaw in the x402 SDK: resource servers accepting Solana payments are affected when the facilitator runs a vulnerable SDK. Facilitators processing Solana payments must upgrade; clients need not.",
+      "issue": "K3",
+      "item": 10,
+      "url": "https://github.com/advisories/GHSA-qr2g-p6q7-w82m",
+      "published": "2026-03-06",
+      "affected": [
+        { "ecosystem": "npm", "package": "@x402/svm", "fixed": "2.6.0" },
+        { "ecosystem": "pip", "package": "x402", "fixed": "2.3.0" },
+        { "ecosystem": "go", "package": "github.com/coinbase/x402/go", "fixed": "2.5.0" }
+      ]
+    }
+  ]
+}

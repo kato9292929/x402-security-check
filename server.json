@@ -1,0 +1,23 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.kato9292929/x402-security-check-mcp",
+  "title": "x402 Security Check MCP",
+  "description": "Read-only checks for x402 sellers: SDK advisories, live 402 and EIP-712 domain, facilitator signers.",
+  "repository": {
+    "url": "https://github.com/kato9292929/x402-security-check",
+    "source": "github"
+  },
+  "websiteUrl": "https://github.com/kato9292929/x402-security-check#readme",
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "x402-security-check-mcp",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}
