@@ -68,6 +68,12 @@ export function scanLockfile(path, content, names, rel = path) {
     if (kind === "npm") {
         // "node_modules/@x402/svm": {   (v2/v3)   or   "@x402/svm": {   (v1 "dependencies")
         for (let i = 0; i < lines.length; i++) {
+            // Whole entry on one line: "node_modules/@x402/svm": { "version": "2.5.0", ... }
+            const one = /^\s*"(?:(?:.*\/)?node_modules\/)?((?:@[^/"]+\/)?[^/"]+)":\s*\{.*"version":\s*"([^"]+)"/.exec(lines[i]);
+            if (one && npm.has(one[1])) {
+                add("npm", one[1], one[2], i);
+                continue;
+            }
             const m = /^\s*"(?:(?:.*\/)?node_modules\/)?((?:@[^/"]+\/)?[^/"]+)":\s*\{\s*$/.exec(lines[i]);
             if (!m || !npm.has(m[1]))
                 continue;
