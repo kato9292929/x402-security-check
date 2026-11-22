@@ -1,0 +1,63 @@
+# Weekly check for x402 SDK advisories that data/advisories.json does not have yet.
+# It never edits the file (it is updated by hand, see CLAUDE.md): for each new advisory ID it
+# opens one issue with the entry `npm run update-advisories` would add. An ID that already has
+# an issue (open or closed) is not reported again. The job fails if the GitHub API cannot be read,
+# so a broken check shows up in Actions instead of looking like "no new advisories".
+name: Advisories
+
+on:
+  schedule:
+    - cron: "17 2 * * 1" # Mondays 02:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: advisories
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: Look for advisories not in data/advisories.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run --silent update-advisories -- --dry-run --json "$RUNNER_TEMP/new.json"
+
+      - name: Open one issue per new advisory
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          n="$(jq '.added | length' "$RUNNER_TEMP/new.json")"
+          echo "New advisories: $n" >> "$GITHUB_STEP_SUMMARY"
+          for i in $(seq 0 $((n - 1))); do
+            entry="$(jq ".added[$i]" "$RUNNER_TEMP/new.json")"
+            id="$(jq -r .id <<<"$entry")"
+            title="x402 SDK advisory not in data/advisories.json: $id"
+            if [ -n "$(gh issue list --state all --search "\"$id\" in:title" --json number --jq '.[].number')" ]; then
+              echo "- $id: already has an issue" >> "$GITHUB_STEP_SUMMARY"
+              continue
+            fi
+            {
+              echo "$(jq -r .url <<<"$entry") is not in \`data/advisories.json\` yet, so \`check_sdk_advisories\` does not report it."
+              echo
+              echo "Run \`npm run update-advisories\`, review the entry it adds (summary, issue, item; the API's summary is in English and the issue/item default to K3 / 10), and commit."
+              echo
+              echo '```json'
+              echo "$entry"
+              echo '```'
+            } > "$RUNNER_TEMP/body.md"
+            gh issue create --title "$title" --body-file "$RUNNER_TEMP/body.md"
+            echo "- $id: issue opened" >> "$GITHUB_STEP_SUMMARY"
+          done

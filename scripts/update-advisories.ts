@@ -3,6 +3,7 @@
  *
  *   npm run update-advisories            # writes data/advisories.json
  *   npm run update-advisories -- --dry-run
+ *   npm run update-advisories -- --dry-run --json out.json   # also write the new entries as JSON
  *
  * Uses the public REST endpoint GET https://api.github.com/advisories?ecosystem=..&affects=..
  * without a key (three requests, one per ecosystem; the unauthenticated limit is 60/hour per IP). GITHUB_TOKEN is
@@ -14,7 +15,8 @@ import { resolve } from "node:path";
 import type { AdvisoryData, Advisory, AffectedPackage, Ecosystem } from "../server/src/data.js";
 
 const FILE = resolve(import.meta.dirname, "..", "data", "advisories.json");
-const API = "https://api.github.com/advisories";
+/** Overridable for tests only. */
+const API = process.env.X402SC_ADVISORIES_API || "https://api.github.com/advisories";
 
 /** GitHub ecosystem names -> ours. */
 const ECOSYSTEM: Record<string, Ecosystem> = { npm: "npm", pip: "pip", go: "go" };
@@ -70,7 +72,11 @@ export function toAdvisory(g: GhAdvisory, names: AdvisoryData["sdk_packages"]): 
 }
 
 /** Returns the merged data and the IDs that were added. Existing entries are never changed. */
-export function mergeAdvisories(data: AdvisoryData, fetched: GhAdvisory[], today: string): { data: AdvisoryData; added: string[] } {
+export function mergeAdvisories(
+  data: AdvisoryData,
+  fetched: GhAdvisory[],
+  today: string,
+): { data: AdvisoryData; added: string[]; entries: Advisory[] } {
   const have = new Set(data.advisories.map((a) => a.id));
   const added: Advisory[] = [];
   for (const g of fetched) {
@@ -81,8 +87,8 @@ export function mergeAdvisories(data: AdvisoryData, fetched: GhAdvisory[], today
       have.add(a.id);
     }
   }
-  if (!added.length) return { data, added: [] };
-  return { data: { ...data, updated: today, advisories: [...data.advisories, ...added] }, added: added.map((a) => a.id) };
+  if (!added.length) return { data, added: [], entries: [] };
+  return { data: { ...data, updated: today, advisories: [...data.advisories, ...added] }, added: added.map((a) => a.id), entries: added };
 }
 
 /** One request per ecosystem: `affects` takes a comma-separated package list. */
@@ -99,11 +105,15 @@ async function fetchFor(ecosystem: Ecosystem, pkgs: string[]): Promise<GhAdvisor
 
 async function main() {
   const dry = process.argv.includes("--dry-run");
+  const jsonAt = process.argv.indexOf("--json");
+  const jsonOut = jsonAt > 0 ? process.argv[jsonAt + 1] : undefined;
+  if (jsonAt > 0 && !jsonOut) throw new Error("--json needs a file path");
   const data = JSON.parse(readFileSync(FILE, "utf8")) as AdvisoryData;
   const fetched: GhAdvisory[] = [];
   for (const [eco, pkgs] of Object.entries(data.sdk_packages) as [Ecosystem, string[]][]) fetched.push(...(await fetchFor(eco, pkgs)));
-  const { data: merged, added } = mergeAdvisories(data, fetched, new Date().toISOString().slice(0, 10));
+  const { data: merged, added, entries } = mergeAdvisories(data, fetched, new Date().toISOString().slice(0, 10));
   console.log(`fetched ${fetched.length} advisory records; new: ${added.length ? added.join(", ") : "none"}`);
+  if (jsonOut) writeFileSync(jsonOut, JSON.stringify({ fetched: fetched.length, added: entries }, null, 2) + "\n");
   if (added.length && !dry) {
     writeFileSync(FILE, JSON.stringify(merged, null, 2) + "\n");
     console.log(`wrote ${FILE}; review the diff (summary, issue, item) before committing.`);

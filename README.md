@@ -23,6 +23,18 @@ claude plugin install x402-security-check@x402inc
 
 点検の対象は seller の API サーバー側（HTTP ハンドラ、x402 のミドルウェア設定、CDN・ホスティングの設定、依存関係）。トークンのコントラクトと buyer 側のコードは対象外。
 
+> この点検は11項目に絞ったもので、網羅的なセキュリティ監査ではない。指摘が無いことは、脆弱性が無いことを意味しない。コントラクト、buyer 側のコード、リポジトリに無い本番の設定（環境変数・CDN など）は見ていない（見られない）。修正を当てるか、どう直すかは、使う人が判断する。
+
+## x402 Inc. の他の製品との関係
+
+1回の支払いを、売る側・買う側・その間で別々に確かめる。
+
+1. **seller が出す前に**：x402-security-check でコードを点検する（このプラグイン）。
+2. **出したあと**：[Seller Probe](https://probe.x402jp.com) が実際に買い、届いたか・説明どおりか・送金がチェーン上にあるかを公開する。`lookup_probe` はこの記録を点検の根拠に使う。
+3. **buyer が買う前に**：[AgentPay402 MCP](https://github.com/kato9292929/x402-wallet-mcp) が Seller Probe の記録を引き、届かなかった seller への支払いを止める。
+
+同じマーケットプレイス `x402inc` から入る。
+
 ## MCP のツール
 
 すべて読むだけ。支払い・署名はしない。秘密鍵・ウォレットの認証情報は受け取らず、持たない。
@@ -157,11 +169,27 @@ claude plugin install x402-security-check@x402inc
 
 - `data/advisories.json`：x402 SDK の公開アドバイザリと修正版。手で更新する。最初は [GHSA-qr2g-p6q7-w82m](https://github.com/advisories/GHSA-qr2g-p6q7-w82m)（Solana 支払いの検証の欠陥。修正版：npm `@x402/svm` 2.6.0、PyPI `x402` 2.3.0、Go `github.com/coinbase/x402/go` 2.5.0）。
   - `npm run update-advisories`（`-- --dry-run` で書き込まない）が GitHub Advisory Database の公開 API（`GET https://api.github.com/advisories?ecosystem=...&affects=...`、キー不要、エコシステムごとに1回）から x402 関連を取り直し、まだ無い ID だけを足す。既存の項目は書き換えない。足された項目の summary・issue・item を見直してからコミットする。キー無しの上限は IP あたり60回/時。
+  - GitHub Actions の Advisories ワークフロー（`.github/workflows/advisories.yml`）が、毎週月曜（UTC 02:17）と手動実行のときに同じ取り直しを `--dry-run` で回す。まだファイルに無い ID が見つかると、ID ごとに issue を1つ開き、足される予定の項目を本文に載せる。ファイルは書き換えない。一度 issue を開いた ID は、閉じたあとも開き直さない。API を読めなかったときはジョブが失敗する（「新しいものは無い」と区別するため）。
 - `data/issues.json`：[x402 per-call APIの実装上の脆弱性 サマリー](https://note.com/x402inc/n/nb2221395494a) の25件（B1〜B7、S1〜S9、F1〜F4、K1〜K3、C1〜C2）と、スキルの11項目との対応。buyer 側・市場全体の課題（B1〜B5・B7、S3、S4、F4、C1、C2）は seller のコードの点検範囲の外なので、どの項目にも対応させていない。
 
-## npm・他の MCP クライアント
+## Claude Desktop・他の MCP クライアント
 
-同じサーバーを stdio の MCP サーバーとして単体でも使える：`npx -y x402-security-check-mcp`（npm `x402-security-check-mcp`、MCP Registry `io.github.kato9292929/x402-security-check-mcp`）。リポジトリのルートには [Agent Plugins 1.0](https://agent-plugins.org/specification) の `plugin.json`・`mcp.json` もあり、こちらは `npx -y x402-security-check-mcp@<version>` で起動する。
+MCP サーバーは手元で動く stdio のサーバーなので、リポジトリを手元に置けば、Claude Desktop など他のクライアントの設定ファイルに書いてつなげる（スキルは Claude Code 用）。
+
+```json
+{
+  "mcpServers": {
+    "x402-security-check": {
+      "command": "node",
+      "args": ["/path/to/x402-security-check/server/dist/index.js"]
+    }
+  }
+}
+```
+
+先に、リポジトリで `npm ci` を実行して依存を入れておく。
+
+npm（`x402-security-check-mcp`）と MCP Registry（`io.github.kato9292929/x402-security-check-mcp`）には、まだ公開していない。公開したら `npx -y x402-security-check-mcp` で、リポジトリを置かずに起動できるようになる。リポジトリのルートにある [Agent Plugins 1.0](https://agent-plugins.org/specification) の `plugin.json`・`mcp.json` も、この npm のパッケージを `npx -y x402-security-check-mcp@<version>` で起動する形なので、公開までは動かない。
 
 ## 開発
 
