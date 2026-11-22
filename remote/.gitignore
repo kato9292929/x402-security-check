@@ -1,0 +1,6 @@
+node_modules/
+.next/
+generated/
+public/x402-security-check.zip
+next-env.d.ts
+*.tsbuildinfo

@@ -25,6 +25,27 @@ jobs:
       - run: npm ci
       - run: npm run verify
 
+  remote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            remote/package-lock.json
+      - run: npm ci
+      - run: npm ci
+        working-directory: remote
+      - name: Tests, typecheck and build of the remote server
+        working-directory: remote
+        run: |
+          npm test
+          npx tsc --noEmit
+          npx next build
+
   risk-paths:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest

@@ -14,6 +14,23 @@ claude plugin install x402-security-check@x402inc
 
 更新：`claude plugin marketplace update x402inc`。インストールせずに試す：`claude --plugin-dir /path/to/x402-security-check`。
 
+## claude.ai だけで使う（リモート版）
+
+ターミナルを使わず、claude.ai（ウェブ）だけで点検できる版。`remote/` を Vercel に置いて動かす。
+
+1. 「Customize > Connectors」→「Add custom connector」に接続URL（`https://<ドメイン>/api/mcp`）を貼り、認証で「No sign-in」を選んで追加する。Free はカスタムコネクタが1つまで。Team・Enterprise は Owner が組織の設定から追加する。
+2. 新しいチャットの「＋」で、このコネクタの `x402_security_check` を選べるか見る。選べなければ、入口のページ（`https://<ドメイン>/`）からスキルの ZIP をダウンロードし、「Customize > Skills」→「＋」→「Create skill」→「Upload a skill」で入れる。設定の「Code execution and file creation」をオンにする。
+3. 「＋」→「Add from GitHub」で点検したいファイル（有料のAPIのルート、x402 の設定、ホスティングの設定、lockfile）を選び、「x402の点検して」と頼む。渡るのは選んだファイルの中身だけなので、差分ではなく選んだファイルの全体を点検する。
+
+リモート版のツールは Claude Code 版と同じコード（`server/src`）で動く。違いは2つ。
+
+- `check_sdk_advisories` は、手元のパスの代わりに、lockfile の中身とファイル名か、公開リポジトリの GitHub の URL を受け取る。URL のときは、GitHub の公開 API でファイルの一覧を取り、`raw.githubusercontent.com` から lockfile を読む。一覧が取れないとき（キー無しの上限など）は、リポジトリの直下の lockfile だけを探す。
+- 外部の URL を読むときは https だけを受け付ける。名前解決したあとのアドレスで判定し、localhost・プライベート・リンクローカル（クラウドのメタデータを含む）などには接続しない（`server/src/net-guard.ts`）。リダイレクトは追わず、時間と本文の大きさに上限がある。
+
+点検の手順（SKILL.md の本文）は、MCP の prompt `x402_security_check` としても出している。呼び出し回数は Vercel Firewall のルール（ID `x402-security-check-mcp`、条件 `@vercel/firewall`）で制限する。ルールが無いあいだは制限なしで動く。
+
+置き方：Vercel のプロジェクトの Root Directory を `remote` にする（`remote` の外の `server/dist`・`data`・`skills` をビルドで読むので、「Include files outside the root directory in the Build Step」は有効のまま）。ビルドのたびに、ツールのコード・データ・スキルの ZIP（`x402-security-check/` が一番上）を作り直す。
+
 ## 何が入っているか
 
 | 部分 | 役割 |
@@ -201,9 +218,9 @@ npm ci
 npm run verify
 ```
 
-`npm run verify` が型検査・`server/dist` の一致・テスト・版の一致・`claude plugin validate`・risk-paths の一覧をまとめて回す（CI も同じ）。テストはネットワークに出ず、402 を返す seller・JSON-RPC・facilitator・Seller Probe はローカルのモックで確かめる。作業のきまりは [CLAUDE.md](CLAUDE.md)。
+`npm run verify` が型検査・`server/dist` の一致・テスト・版の一致・`claude plugin validate`・リモート版（`remote/` のテスト・型検査・ビルド。`cd remote && npm ci` 済みのとき）・risk-paths の一覧をまとめて回す（CI も同じ）。テストはネットワークに出ず、402 を返す seller・JSON-RPC・facilitator・Seller Probe はローカルのモックで確かめる。作業のきまりは [CLAUDE.md](CLAUDE.md)。
 
-リリース：`package.json`・`server.json`（2か所）・`.claude-plugin/plugin.json`・`plugin.json`・`mcp.json` の版・`server/src/version.ts` をそろえて main にマージすると、Publish ワークフローが npm（Trusted publishing）と MCP Registry に公開し、`v<version>` のタグを付ける。
+リリース：`package.json`・`server.json`（2か所）・`.claude-plugin/plugin.json`・`plugin.json`・`mcp.json` の版・`server/src/version.ts` をそろえて main にマージする。main への push では公開しない。Actions の Publish ワークフローを手で実行したときだけ公開し、`v<version>` のタグを付ける。
 
 ## ライセンス
 

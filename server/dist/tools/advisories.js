@@ -6,8 +6,8 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { basename, join, relative, resolve } from "node:path";
 import { readData } from "../data.js";
 import { compareVersions, isBelow, parseVersion } from "../version-compare.js";
-const SKIP_DIRS = new Set(["node_modules", ".git", "vendor", "dist", "build", ".next", ".venv", "venv", "__pycache__", ".turbo", ".cache", "coverage"]);
-const MAX_DEPTH = 6;
+export const SKIP_DIRS = new Set(["node_modules", ".git", "vendor", "dist", "build", ".next", ".venv", "venv", "__pycache__", ".turbo", ".cache", "coverage"]);
+export const MAX_DEPTH = 6;
 const MAX_FILE_BYTES = 30_000_000;
 export function lockfileKind(name) {
     if (name === "package-lock.json" || name === "npm-shrinkwrap.json")
@@ -167,23 +167,16 @@ export function scanLockfile(path, content, names, rel = path) {
     }
     return found;
 }
-export function checkSdkAdvisories(path, data = readData("advisories.json")) {
-    const root = resolve(path);
-    const st = statSync(root, { throwIfNoEntry: false });
-    if (!st)
-        throw new Error(`path not found: ${path}`);
-    const files = st.isFile() ? [root] : findLockfiles(root);
-    const base = st.isFile() ? resolve(root, "..") : root;
+/** Scans lockfile contents and matches them against the advisories. No file system access. */
+export function scanLockfileContents(files, data) {
     const packages = [];
-    const skipped = [];
+    const ignored = [];
     for (const f of files) {
-        const rel = relative(base, f) || basename(f);
-        const size = statSync(f).size;
-        if (size > MAX_FILE_BYTES) {
-            skipped.push({ file: rel, reason: `larger than ${MAX_FILE_BYTES} bytes` });
+        if (!lockfileKind(basename(f.path))) {
+            ignored.push(f.path);
             continue;
         }
-        packages.push(...scanLockfile(f, readFileSync(f, "utf8"), data.sdk_packages, rel));
+        packages.push(...scanLockfile(f.path, f.content, data.sdk_packages, f.path));
     }
     const vulnerable = [];
     for (const p of packages) {
@@ -213,15 +206,41 @@ export function checkSdkAdvisories(path, data = readData("advisories.json")) {
         }
     }
     return {
-        path: root,
-        lockfiles: files.map((f) => relative(base, f) || basename(f)),
-        skipped,
+        lockfiles: files.map((f) => f.path).filter((p) => !ignored.includes(p)),
+        not_lockfiles: ignored,
         packages,
         vulnerable,
         advisories_checked: data.advisories.map((a) => a.id),
         advisories_updated: data.updated,
-        note: files.length
-            ? undefined
-            : "No lockfile found (package-lock.json, pnpm-lock.yaml, yarn.lock, requirements*.txt, poetry.lock, uv.lock, Pipfile.lock, go.sum). The installed versions cannot be confirmed from manifests alone.",
+    };
+}
+export const NO_LOCKFILE_NOTE = "No lockfile found (package-lock.json, pnpm-lock.yaml, yarn.lock, requirements*.txt, poetry.lock, uv.lock, Pipfile.lock, go.sum). The installed versions cannot be confirmed from manifests alone.";
+export function checkSdkAdvisories(path, data = readData("advisories.json")) {
+    const root = resolve(path);
+    const st = statSync(root, { throwIfNoEntry: false });
+    if (!st)
+        throw new Error(`path not found: ${path}`);
+    const files = st.isFile() ? [root] : findLockfiles(root);
+    const base = st.isFile() ? resolve(root, "..") : root;
+    const inputs = [];
+    const skipped = [];
+    for (const f of files) {
+        const rel = relative(base, f) || basename(f);
+        if (statSync(f).size > MAX_FILE_BYTES) {
+            skipped.push({ file: rel, reason: `larger than ${MAX_FILE_BYTES} bytes` });
+            continue;
+        }
+        inputs.push({ path: rel, content: readFileSync(f, "utf8") });
+    }
+    const r = scanLockfileContents(inputs, data);
+    return {
+        path: root,
+        lockfiles: files.map((f) => relative(base, f) || basename(f)),
+        skipped,
+        packages: r.packages,
+        vulnerable: r.vulnerable,
+        advisories_checked: r.advisories_checked,
+        advisories_updated: r.advisories_updated,
+        note: files.length ? undefined : NO_LOCKFILE_NOTE,
     };
 }
