@@ -27,3 +27,21 @@ describe("read_repository file selection", () => {
     expect(numbered("a\nb")).toBe("   1| a\n   2| b");
   });
 });
+
+import { excerpt, localImports } from "../server/src/tools/repo-files.js";
+
+describe("read_repository imports and excerpts", () => {
+  it("follows local imports from x402 code (relative, @/ alias, .js to .ts, Python)", () => {
+    const all = new Set(["src/lib/jin-data.ts", "src/lib/x402-route.ts", "src/lib/receipts.ts", "src/app/api/jin/series/route.ts", "storage/db.py", "api/x402.py", "api/util/__init__.py"]);
+    const ts = `import { withX402 } from "@/lib/x402-route";\nimport { getJinSeries } from "../../../../lib/jin-data.js";\nimport next from "next/server";`;
+    expect(localImports("src/app/api/jin/series/route.ts", ts, all)).toEqual(["src/lib/jin-data.ts", "src/lib/x402-route.ts"]);
+    const py = "from storage.db import get\nfrom .util import x\nimport os";
+    expect(localImports("api/x402.py", py, all)).toEqual(["api/util/__init__.py", "storage/db.py"]);
+  });
+  it("cuts long files and says where", () => {
+    const e = excerpt(Array.from({ length: 2000 }, (_, i) => `line ${i}`).join("\n"), 1000);
+    expect(e.cut).toBe(true);
+    expect(e.content.length).toBeLessThan(1100);
+    expect(e.content).toMatch(/cut after line \d+; read the rest with paths/);
+  });
+});

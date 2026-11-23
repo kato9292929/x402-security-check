@@ -82,15 +82,17 @@ export function registerAll(server: Server) {
     {
       title: "Read a repository for the check",
       description:
-        "Reads the files of a public GitHub repository that an x402 seller check needs: hosting / CDN / framework configuration " +
-        "(vercel.json, next.config.*, middleware, wrangler.toml, ...), package manifests, and source files that mention x402 or payments " +
-        "(paymentMiddleware, settle, facilitator, payTo, PAYMENT-* headers). Contents are returned with line numbers. Lists the lockfiles.",
+        "Reads the files of a public GitHub repository that an x402 seller check needs. Without paths: returns, with line numbers and " +
+        "within a size limit, the source files that mention x402 or payments (paymentMiddleware, settle, facilitator, payTo, PAYMENT-* " +
+        "headers) and the hosting / CDN / framework configuration; and lists by path the files that did not fit, the local files " +
+        "the x402 code imports (related_files), and the lockfiles. With paths (up to 8): returns those files.",
       inputSchema: z.object({
         repository_url: z.string().describe("https://github.com/<owner>/<repo>, optionally /tree/<branch>. Public repositories only."),
+        paths: z.array(z.string()).max(8).optional().describe("Repository paths to read, e.g. src/lib/jin-data.ts."),
       }),
       annotations: { title: "Read a repository for the check", ...readOnly(true) },
     },
-    async ({ repository_url }) => run(() => readRepository(repository_url)),
+    async ({ repository_url, paths }) => run(() => readRepository(repository_url, paths)),
   );
 
   server.registerTool(
