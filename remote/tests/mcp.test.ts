@@ -20,11 +20,18 @@ const call = async (name: string, args: Record<string, unknown>) => (await rpc("
 const json = (r: any) => JSON.parse(r.content[0].text);
 
 describe("remote MCP endpoint", () => {
-  it("lists the five tools, each with a title and readOnlyHint", async () => {
+  it("lists the six tools, each with a title and readOnlyHint", async () => {
     const { status, body } = await rpc("tools/list");
     expect(status).toBe(200);
     const tools = body.result.tools;
-    expect(tools.map((t: any) => t.name).sort()).toEqual(["check_sdk_advisories", "get_facilitator_signers", "inspect_402", "list_issues", "lookup_probe"]);
+    expect(tools.map((t: any) => t.name).sort()).toEqual([
+      "check_sdk_advisories",
+      "get_facilitator_signers",
+      "inspect_402",
+      "list_issues",
+      "lookup_probe",
+      "x402_security_check",
+    ]);
     for (const t of tools) {
       expect(t.title).toBeTruthy();
       expect(t.annotations.readOnlyHint).toBe(true);
@@ -38,6 +45,13 @@ describe("remote MCP endpoint", () => {
     const got = await rpc("prompts/get", { name: "x402_security_check" });
     expect(got.body.result.messages[0].content.text).toBe(SKILL_BODY);
     expect(SKILL_BODY).toContain("git が使えないとき");
+  });
+
+  it("the tool x402_security_check returns the check procedure (same text as SKILL.md)", async () => {
+    const r = await call("x402_security_check", {});
+    expect(r.content[0].text).toBe(SKILL_BODY);
+    const init = await rpc("initialize", { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "t", version: "0" } });
+    expect(init.body.result.instructions).toMatch(/x402_security_check returns the check procedure/);
   });
 
   it("check_sdk_advisories reads lockfile contents", async () => {

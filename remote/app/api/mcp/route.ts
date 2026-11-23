@@ -1,6 +1,6 @@
 import { checkRateLimit } from "@vercel/firewall";
 import { createMcpHandler } from "mcp-handler";
-import { registerAll } from "../../../lib/register";
+import { INSTRUCTIONS, registerAll } from "../../../lib/register";
 import { VERSION } from "../../../generated/core/version.js";
 
 /** The rate limit rule's ID in the Vercel Firewall (condition "@vercel/firewall"). */
@@ -8,6 +8,7 @@ const RATE_LIMIT_ID = "x402-security-check-mcp";
 
 const mcp = createMcpHandler((server) => registerAll(server as never), {
   serverInfo: { name: "x402-security-check", version: VERSION },
+  instructions: INSTRUCTIONS,
 });
 
 /** Calls per client IP are limited by the Vercel Firewall rule above. Outside Vercel there is no limit. */

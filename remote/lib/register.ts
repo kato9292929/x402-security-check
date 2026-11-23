@@ -56,7 +56,26 @@ export async function checkSdkAdvisoriesRemote(args: { lockfiles?: { file_name: 
   };
 }
 
+export const INSTRUCTIONS =
+  "x402 Security Check: checks the code of an x402 seller's API server (the side that returns 402 and settles payments) on 11 items. " +
+  "x402_security_check returns the check procedure. The other tools are read-only checks used as evidence: SDK advisories in lockfiles, " +
+  "a live 402, facilitator signers, Seller Probe purchase records and the list of 25 x402 issues. No tool pays, signs or holds keys.";
+
 export function registerAll(server: Server) {
+  server.registerTool(
+    "x402_security_check",
+    {
+      title: "x402 security check procedure",
+      description:
+        "Returns the procedure for an x402 security check (x402 セキュリティチェック・点検) of a seller's API server code: scope, the 11 items " +
+        "(input checks before settle, 402 contents, payment order, replays, payment/resource match, caching, expiry, facilitator results, " +
+        "payment response header, SDK advisories, secrets), severity levels and the report format. Same text as the x402-security-check skill.",
+      inputSchema: z.object({}),
+      annotations: { title: "x402 security check procedure", ...readOnly(false) },
+    },
+    async () => ({ content: [{ type: "text" as const, text: SKILL_BODY }] }),
+  );
+
   server.registerTool(
     "check_sdk_advisories",
     {

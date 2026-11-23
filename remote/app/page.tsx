@@ -46,7 +46,7 @@ export default async function Home() {
           x402-security-check.zip をダウンロード
         </a>
       </p>
-      <p className="note">コネクタから点検の手順を選べないときだけ使います（下の「入れ方」の3）。</p>
+      <p className="note">普段は要りません。スキルとしても入れておきたいときに使います。</p>
 
       <h2>claude.ai での入れ方</h2>
       <ol>
@@ -54,10 +54,10 @@ export default async function Home() {
           <strong>コネクタを追加する</strong>：「Customize &gt; Connectors」→「Add custom connector」で上の接続URLを貼り、認証で「No sign-in」を選んで「Add」。画面が1つのときと2段階のときがあります。
         </li>
         <li>
-          <strong>点検の手順を選べるか見る</strong>：新しいチャットで「＋」を開き、このコネクタの <code>x402_security_check</code> が選べれば、スキルのZIPは要りません。
+          <strong>そのまま頼む</strong>：コネクタを入れたチャットで「x402の点検して」と頼めば、Claude がこのコネクタから点検の手順（ツール <code>x402_security_check</code>）を読み込んで点検します。スキルの ZIP は要りません。
         </li>
         <li>
-          <strong>選べないときはスキルを入れる</strong>：上のZIPをダウンロードし、「Customize &gt; Skills」→「＋」→「Create skill」→「Upload a skill」でアップロード。設定の「Code execution and file creation」（画面によっては「Create and edit files」）をオンにします。
+          <strong>スキルとして入れたいとき（任意）</strong>：上の ZIP を「Customize &gt; Skills」→「＋」→「Create skill」→「Upload a skill」でアップロードします。設定の「Code execution and file creation」（画面によっては「Create and edit files」）をオンにします。
         </li>
       </ol>
 

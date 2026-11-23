@@ -19,7 +19,7 @@ claude plugin install x402-security-check@x402inc
 ターミナルを使わず、claude.ai（ウェブ）だけで点検できる版。`remote/` を Vercel に置いて動かす。
 
 1. 「Customize > Connectors」→「Add custom connector」に接続URL（`https://<ドメイン>/api/mcp`）を貼り、認証で「No sign-in」を選んで追加する。Free はカスタムコネクタが1つまで。Team・Enterprise は Owner が組織の設定から追加する。
-2. 新しいチャットの「＋」で、このコネクタの `x402_security_check` を選べるか見る。選べなければ、入口のページ（`https://<ドメイン>/`）からスキルの ZIP をダウンロードし、「Customize > Skills」→「＋」→「Create skill」→「Upload a skill」で入れる。設定の「Code execution and file creation」をオンにする。
+2. コネクタを入れたチャットで頼めば、Claude がツール `x402_security_check` から点検の手順を読み込む。スキルの ZIP（入口のページ `https://<ドメイン>/`）は任意で、入れるときは「Customize > Skills」→「＋」→「Create skill」→「Upload a skill」。設定の「Code execution and file creation」をオンにする。
 3. 「＋」→「Add from GitHub」で点検したいファイル（有料のAPIのルート、x402 の設定、ホスティングの設定、lockfile）を選び、「x402の点検して」と頼む。渡るのは選んだファイルの中身だけなので、差分ではなく選んだファイルの全体を点検する。
 
 リモート版のツールは Claude Code 版と同じコード（`server/src`）で動く。違いは2つ。
@@ -27,7 +27,7 @@ claude plugin install x402-security-check@x402inc
 - `check_sdk_advisories` は、手元のパスの代わりに、lockfile の中身とファイル名か、公開リポジトリの GitHub の URL を受け取る。URL のときは、GitHub の公開 API でファイルの一覧を取り、`raw.githubusercontent.com` から lockfile を読む。一覧が取れないとき（キー無しの上限など）は、リポジトリの直下の lockfile だけを探す。
 - 外部の URL を読むときは https だけを受け付ける。名前解決したあとのアドレスで判定し、localhost・プライベート・リンクローカル（クラウドのメタデータを含む）などには接続しない（`server/src/net-guard.ts`）。リダイレクトは追わず、時間と本文の大きさに上限がある。
 
-点検の手順（SKILL.md の本文）は、MCP の prompt `x402_security_check` としても出している。呼び出し回数は Vercel Firewall のルール（ID `x402-security-check-mcp`、条件 `@vercel/firewall`）で制限する。ルールが無いあいだは制限なしで動く。
+点検の手順（SKILL.md の本文）は、ツール `x402_security_check` が返す。同じ本文を MCP の prompt `x402_security_check` としても出している。呼び出し回数は Vercel Firewall のルール（ID `x402-security-check-mcp`、条件 `@vercel/firewall`）で制限する。ルールが無いあいだは制限なしで動く。
 
 置き方：Vercel のプロジェクトの Root Directory を `remote` にする（`remote` の外の `server/dist`・`data`・`skills` をビルドで読むので、「Include files outside the root directory in the Build Step」は有効のまま）。ビルドのたびに、ツールのコード・データ・スキルの ZIP（`x402-security-check/` が一番上）を作り直す。
 
