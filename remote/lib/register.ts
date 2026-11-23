@@ -12,6 +12,7 @@ import { getFacilitatorSigners } from "../generated/core/tools/facilitator.js";
 import { fetchRepoLockfiles } from "../generated/core/tools/github-lockfiles.js";
 import { inspect402 } from "../generated/core/tools/inspect402.js";
 import { lookupProbe } from "../generated/core/tools/probe.js";
+import { readRepository } from "../generated/core/tools/repo-files.js";
 import type { AdvisoryData } from "../generated/core/data.js";
 import { SKILL_BODY } from "../generated/skill";
 
@@ -58,7 +59,7 @@ export async function checkSdkAdvisoriesRemote(args: { lockfiles?: { file_name: 
 
 export const INSTRUCTIONS =
   "x402 Security Check: checks the code of an x402 seller's API server (the side that returns 402 and settles payments) on 11 items. " +
-  "x402_security_check returns the check procedure. The other tools are read-only checks used as evidence: SDK advisories in lockfiles, " +
+  "x402_security_check returns the check procedure and read_repository reads a public GitHub repository's relevant files. The other tools are read-only checks used as evidence: SDK advisories in lockfiles, " +
   "a live 402, facilitator signers, Seller Probe purchase records and the list of 25 x402 issues. No tool pays, signs or holds keys.";
 
 export function registerAll(server: Server) {
@@ -74,6 +75,22 @@ export function registerAll(server: Server) {
       annotations: { title: "x402 security check procedure", ...readOnly(false) },
     },
     async () => ({ content: [{ type: "text" as const, text: SKILL_BODY }] }),
+  );
+
+  server.registerTool(
+    "read_repository",
+    {
+      title: "Read a repository for the check",
+      description:
+        "Reads the files of a public GitHub repository that an x402 seller check needs: hosting / CDN / framework configuration " +
+        "(vercel.json, next.config.*, middleware, wrangler.toml, ...), package manifests, and source files that mention x402 or payments " +
+        "(paymentMiddleware, settle, facilitator, payTo, PAYMENT-* headers). Contents are returned with line numbers. Lists the lockfiles.",
+      inputSchema: z.object({
+        repository_url: z.string().describe("https://github.com/<owner>/<repo>, optionally /tree/<branch>. Public repositories only."),
+      }),
+      annotations: { title: "Read a repository for the check", ...readOnly(true) },
+    },
+    async ({ repository_url }) => run(() => readRepository(repository_url)),
   );
 
   server.registerTool(

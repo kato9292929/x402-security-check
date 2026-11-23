@@ -20,7 +20,7 @@ const call = async (name: string, args: Record<string, unknown>) => (await rpc("
 const json = (r: any) => JSON.parse(r.content[0].text);
 
 describe("remote MCP endpoint", () => {
-  it("lists the six tools, each with a title and readOnlyHint", async () => {
+  it("lists the seven tools, each with a title and readOnlyHint", async () => {
     const { status, body } = await rpc("tools/list");
     expect(status).toBe(200);
     const tools = body.result.tools;
@@ -30,6 +30,7 @@ describe("remote MCP endpoint", () => {
       "inspect_402",
       "list_issues",
       "lookup_probe",
+      "read_repository",
       "x402_security_check",
     ]);
     for (const t of tools) {
