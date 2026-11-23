@@ -45,3 +45,17 @@ describe("read_repository imports and excerpts", () => {
     expect(e.content).toMatch(/cut after line \d+; read the rest with paths/);
   });
 });
+
+import { x402Score } from "../server/src/tools/repo-files.js";
+
+describe("read_repository ranking", () => {
+  it("ranks x402 route and receipt code above long files that mention payments once", () => {
+    const route = x402Score("src/lib/x402-route.ts", "withX402 settle facilitator payTo PAYMENT-RESPONSE ".repeat(5));
+    const receipts = x402Score("src/lib/receipts.ts", "// x402 receipts\n" + "x".repeat(2000));
+    const job = x402Score("jobs/daily.py", "settle\n" + "y".repeat(40000));
+    const page = x402Score("src/app/page.tsx", "Pay in USDC\n" + "z".repeat(5000));
+    expect(route).toBeGreaterThan(receipts);
+    expect(receipts).toBeGreaterThan(job);
+    expect(page).toBe(0);
+  });
+});

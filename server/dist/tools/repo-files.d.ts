@@ -1,10 +1,12 @@
 export declare const MAX_SOURCE_CANDIDATES = 150;
 export declare const MAX_FILE_BYTES = 200000;
 /** Total characters of file contents in one result (keeps it within a chat's context). */
-export declare const MAX_TOTAL_CHARS = 45000;
+export declare const MAX_TOTAL_CHARS = 35000;
 /** Characters of one file in a result; longer files are cut and say so. */
 export declare const MAX_FILE_CHARS = 15000;
 export declare const MAX_PATHS_PER_CALL = 8;
+/** How strongly a file is about x402: mentions per KB, with paid-route paths first. Higher is earlier. */
+export declare function x402Score(path: string, text: string): number;
 export declare function selectPaths(paths: string[]): {
     configs: string[];
     lockfiles: string[];

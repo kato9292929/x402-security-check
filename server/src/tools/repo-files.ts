@@ -11,7 +11,7 @@ import { parseGitHubUrl } from "./github-lockfiles.js";
 export const MAX_SOURCE_CANDIDATES = 150;
 export const MAX_FILE_BYTES = 200_000;
 /** Total characters of file contents in one result (keeps it within a chat's context). */
-export const MAX_TOTAL_CHARS = 45_000;
+export const MAX_TOTAL_CHARS = 35_000;
 /** Characters of one file in a result; longer files are cut and say so. */
 export const MAX_FILE_CHARS = 15_000;
 export const MAX_PATHS_PER_CALL = 8;
@@ -23,6 +23,19 @@ const SKIP_SOURCE = /(^|\/)(test|tests|__tests__|spec|e2e|examples?|docs?|script
 const SKIP_FILE = /\.(test|spec|stories|d)\.[a-z]+$|\.min\.js$/;
 const X402_HINT =
   /x402|paymentMiddleware|payment-required|payment-signature|x-payment|payment-response|facilitator|payTo|\bsettle\b|withPayment|requirePayment|exact_evm|exactEvm|USDC/i;
+/** Words that mark a file as x402 code (counted to rank files). */
+const X402_STRONG = /x402|paymentMiddleware|withX402|payment-required|payment-signature|x-payment|payment-response|facilitator|payTo|\bsettle\b|verifyPayment|settlePayment/gi;
+const CODE_FILE = /\.(ts|tsx|js|mjs|cjs|py|go|rs|rb)$/;
+
+/** How strongly a file is about x402: mentions per KB, with paid-route paths first. Higher is earlier. */
+export function x402Score(path: string, text: string): number {
+  const hits = text.match(X402_STRONG)?.length ?? 0;
+  if (hits === 0) return 0;
+  const density = hits / Math.max(1, text.length / 1000);
+  const routeBonus = /(route|handler|x402|pay|middleware|server|receipt|sales)/i.test(path) ? 5 : 0;
+  return density + routeBonus + Math.min(hits, 10) / 10;
+}
+
 /** Paths likely to hold paid routes or payment setup are read first. */
 const PRIORITY = /(api|route|routes|server|handler|middleware|pay|x402|app|src|lib)/i;
 
@@ -161,10 +174,11 @@ export async function readRepository(repositoryUrl: string, paths?: string[]) {
   if (pick.sources.length > candidates.length)
     notes.push(`${pick.sources.length} source files; the first ${candidates.length} by path were searched for x402 code.`);
   const bodies = await Promise.all(candidates.map((p) => raw(r.owner, r.repo, r.ref, p, MAX_FILE_BYTES).then((res) => ({ p, res }))));
-  const x402 = bodies.filter(({ res }) => res.status === 200 && X402_HINT.test(res.body));
-  // Paid routes and payment setup first, then the rest of the x402 files.
-  const rank = (p: string) => (/(route|handler|x402|pay|middleware|server)/i.test(p) ? 0 : 1);
-  x402.sort((a, b) => rank(a.p) - rank(b.p) || a.p.localeCompare(b.p));
+  const x402 = bodies
+    .filter(({ res }) => res.status === 200 && X402_HINT.test(res.body))
+    .map((b) => ({ ...b, score: x402Score(b.p, b.res.body) }));
+  // Files most about x402 first (paid routes, payment setup, receipts), weak mentions last.
+  x402.sort((a, b) => b.score - a.score || a.p.localeCompare(b.p));
 
   const included: { path: string; kind: "config" | "source"; content: string; cut: boolean }[] = [];
   const listedOnly: string[] = [];
@@ -185,8 +199,10 @@ export async function readRepository(repositoryUrl: string, paths?: string[]) {
   // Files the x402 code imports (data access, stores, helpers) that do not mention x402 themselves.
   const x402Paths = new Set(x402.map((x) => x.p));
   const related = new Map<string, string[]>();
-  for (const { p, res } of x402) {
+  for (const { p, res, score } of x402) {
+    if (score < 1) continue; // follow imports from x402 code only, not from files that merely mention USDC
     for (const imp of localImports(p, res.body, allSet)) {
+      if (!CODE_FILE.test(imp)) continue;
       if (x402Paths.has(imp)) continue;
       related.set(imp, [...(related.get(imp) ?? []), p]);
     }
