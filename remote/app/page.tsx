@@ -54,7 +54,8 @@ export default async function Home() {
             <CopyButton text={mcpUrl} label="Copy connector URL" done="Copied" className="" />
           </div>
         </div>
-        <div className="logos">
+        <div className="bottom">
+          <div className="logos">
           <span className="works">Works with</span>
           {LOGOS.map((l) => (
             // eslint-disable-next-line @next/next/no-img-element
@@ -68,6 +69,8 @@ export default async function Home() {
               <img key={l.alt} src={l.src} alt={l.alt} style={{ height: l.h, width: "auto" }} />
             )
           ))}
+          </div>
+          <p className="agents">Works from AI agents such as Claude, Claude Code, ChatGPT, Codex, Cursor and VS Code.</p>
         </div>
       </section>
 
