@@ -1,10 +1,16 @@
 import { headers } from "next/headers";
 import { CopyButton } from "./copy-button";
-import { BRANDS, type Brand } from "./brands";
 import { Hands } from "./hands";
 
-/** Agents and services shown in the logo row (only ones checked to work with the connector or used by it). */
-const LOGOS: Brand[] = ["claude", "claudecode", "cursor", "githubcopilot", "modelcontextprotocol", "github", "solana"];
+/**
+ * Official logo files, unmodified: GitHub and GitHub Copilot from brand.github.com (GitHub_Logos.zip),
+ * Cursor from cursor.com/brand (cursor-brand-assets.zip). Logos are trademarks of their owners.
+ */
+const LOGOS: { src: string; alt: string; h: number }[] = [
+  { src: "/logos/github.svg", alt: "GitHub", h: 19 },
+  { src: "/logos/github-copilot.svg", alt: "GitHub Copilot", h: 19 },
+  { src: "/logos/cursor.svg", alt: "Cursor", h: 15 },
+];
 
 const TOOLS: [string, string][] = [
   ["x402_security_check", "Returns the check procedure: 11 items, severity levels and the report format."],
@@ -15,14 +21,6 @@ const TOOLS: [string, string][] = [
   ["lookup_probe", "Looks up Seller Probe's real purchase records for a host."],
   ["list_issues", "Lists the 25 known x402 issues and the check items they map to."],
 ];
-
-function Mark() {
-  return (
-    <svg width="16" height="18" viewBox="0 0 16 18" aria-hidden="true">
-      <path d="M8 0l8 3v6c0 4.4-3.4 8-8 9-4.6-1-8-4.6-8-9V3zm-1.2 11.6L12 6.4l-1.4-1.4-3.8 3.8L5 7l-1.4 1.4z" fill="currentColor" />
-    </svg>
-  );
-}
 
 export default async function Home() {
   const h = await headers();
@@ -36,7 +34,6 @@ export default async function Home() {
         <Hands />
         <nav className="top">
           <a className="brand" href="#">
-            <Mark />
             x402 Security Check
           </a>
           <a className="link" href="#usage">How it works</a>
@@ -50,27 +47,16 @@ export default async function Home() {
             <span className="l1 grad">Check your x402 payments</span>
             <span className="l2">in your code.</span>
           </h1>
-          <p>Add one connector and paste your repository URL. No payment, no keys, no sign-in.</p>
+          <p>Add one connector and paste your repository URL.<br />No payment, no keys, no sign-in.</p>
           <div className="cta">
             <CopyButton text={mcpUrl} label="Copy connector URL" done="Copied" className="" />
           </div>
         </div>
         <div className="logos">
-          <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
-            <defs>
-              <linearGradient id="solana-gradient" x1="0" y1="1" x2="1" y2="0">
-                <stop offset="0" stopColor="#9945FF" />
-                <stop offset="1" stopColor="#14F195" />
-              </linearGradient>
-            </defs>
-          </svg>
-          {LOGOS.map((k) => (
-            <span key={k}>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d={BRANDS[k].path} fill={BRANDS[k].color} />
-              </svg>
-              {BRANDS[k].name}
-            </span>
+          <span className="works">Works with</span>
+          {LOGOS.map((l) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img key={l.alt} src={l.src} alt={l.alt} style={{ height: l.h, width: "auto" }} />
           ))}
         </div>
       </section>
