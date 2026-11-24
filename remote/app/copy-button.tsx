@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-export function CopyButton({ text, label = "コピー", className = "copy" }: { text: string; label?: string; className?: string }) {
+export function CopyButton({ text, label = "Copy", done: doneLabel = "Copied", className = "copy" }: { text: string; label?: string; done?: string; className?: string }) {
   const [done, setDone] = useState(false);
   return (
     <button
@@ -17,7 +17,7 @@ export function CopyButton({ text, label = "コピー", className = "copy" }: { 
         }
       }}
     >
-      {done ? "コピーしました" : label}
+      {done ? doneLabel : label}
     </button>
   );
 }

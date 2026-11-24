@@ -1,34 +1,19 @@
 import { headers } from "next/headers";
 import { CopyButton } from "./copy-button";
+import { BRANDS, type Brand } from "./brands";
 import { Hands } from "./hands";
 
-const ICONS = {
-  leaf: "M3 15c0-7 5-12 14-12-1 9-6 14-13 13l-1 2-2-1z",
-  hex: "M10 1l8 4.5v9L10 19l-8-4.5v-9zM10 6l-4 2.3v4.4L10 15l4-2.3V8.3z",
-  wave: "M1 5q4.5-3 9 0t9 0v3q-4.5 3-9 0t-9 0zm0 7q4.5-3 9 0t9 0v3q-4.5 3-9 0t-9 0z",
-  rings: "M10 1a9 9 0 110 18 9 9 0 010-18zm0 3a6 6 0 100 12 6 6 0 000-12zm0 3a3 3 0 110 6 3 3 0 010-6z",
-  peaks: "M1 17L7 6l3 5 3-7 6 13z",
-  layers: "M10 1l9 4-9 4-9-4zm-9 8l9 4 9-4v3l-9 4-9-4zm0 5l9 4 9-4v2l-9 4-9-4z",
-};
-
-/** What the check looks at (shown in the logo row of the hero). */
-const CHECKS: [keyof typeof ICONS, string][] = [
-  ["hex", "402の中身"],
-  ["leaf", "settle の前の検証"],
-  ["wave", "再送と記録"],
-  ["layers", "キャッシュ"],
-  ["rings", "facilitator の結果"],
-  ["peaks", "SDK のアドバイザリ"],
-];
+/** Agents and services shown in the logo row (only ones checked to work with the connector or used by it). */
+const LOGOS: Brand[] = ["claude", "claudecode", "cursor", "githubcopilot", "modelcontextprotocol", "github", "solana"];
 
 const TOOLS: [string, string][] = [
-  ["x402_security_check", "点検の手順（11項目・重大度・報告の形）を返す"],
-  ["read_repository", "公開リポジトリから x402 の処理と設定のファイルを読む"],
-  ["inspect_402", "本番の URL を支払いなしで叩き、402 の中身と EIP-712 のドメインを確かめる"],
-  ["check_sdk_advisories", "lockfile の x402 SDK の版を公開アドバイザリと照らす"],
-  ["get_facilitator_signers", "facilitator が公開している署名者を取る"],
-  ["lookup_probe", "Seller Probe の購入記録を引く"],
-  ["list_issues", "x402 の課題25件と11項目の対応を返す"],
+  ["x402_security_check", "Returns the check procedure: 11 items, severity levels and the report format."],
+  ["read_repository", "Reads the x402 code and configuration files of a public GitHub repository."],
+  ["inspect_402", "Calls a live URL without paying and checks the 402 and the token's EIP-712 domain."],
+  ["check_sdk_advisories", "Matches the x402 SDK versions in lockfiles against published advisories."],
+  ["get_facilitator_signers", "Gets the signer addresses a facilitator publishes."],
+  ["lookup_probe", "Looks up Seller Probe's real purchase records for a host."],
+  ["list_issues", "Lists the 25 known x402 issues and the check items they map to."],
 ];
 
 function Mark() {
@@ -54,29 +39,29 @@ export default async function Home() {
             <Mark />
             x402 Security Check
           </a>
-          <a className="link" href="#usage">使い方</a>
-          <a className="link" href="#connect">つなぎ方</a>
-          <a className="link" href="#tools">ツール</a>
-          <a className="link" href="#scope">点検の範囲</a>
+          <a className="link" href="#usage">How it works</a>
+          <a className="link" href="#connect">Connect</a>
+          <a className="link" href="#tools">Tools</a>
+          <a className="link" href="#scope">Scope</a>
           <a className="pill" href="https://github.com/kato9292929/x402-security-check">GitHub</a>
         </nav>
         <div className="hero-copy">
           <h1>
-            <span className="l1">x402 の決済を、</span>
-            <span className="l2">コードで点検する。</span>
+            <span className="l1">Check your x402 payments</span>
+            <span className="l2">in your code.</span>
           </h1>
-          <p>コネクタを1つ足して、リポジトリの URL を渡すだけ。支払いも、鍵も、ログインも要りません。</p>
+          <p>Add one connector and paste your repository URL. No payment, no keys, no sign-in.</p>
           <div className="cta">
-            <CopyButton text={mcpUrl} label="接続URLをコピー" className="" />
+            <CopyButton text={mcpUrl} label="Copy connector URL" done="Copied" className="" />
           </div>
         </div>
         <div className="logos">
-          {CHECKS.map(([icon, label]) => (
-            <span key={label}>
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path d={ICONS[icon]} />
+          {LOGOS.map((k) => (
+            <span key={k}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d={BRANDS[k].path} />
               </svg>
-              {label}
+              {BRANDS[k].name}
             </span>
           ))}
         </div>
@@ -85,40 +70,54 @@ export default async function Home() {
       <main className="docs">
         <section id="usage">
           <h2>
-            <span className="k">使い方 — </span>頼むだけ
+            <span className="k">How it works — </span>just ask
           </h2>
-          <p>コネクタを入れたチャットで、点検したいリポジトリの URL を渡します。</p>
-          <div className="ask mono">https://github.com/&lt;持ち主&gt;/&lt;リポジトリ&gt; を点検して</div>
-          <p>Claude が点検の手順を読み込み、x402 に関わるファイル（有料のAPIのルート、x402 の設定、ホスティングの設定、lockfile）を読んで、11項目で点検します。</p>
-          <p className="note">非公開のリポジトリは、チャットの「＋」→「Add from GitHub」でファイルを選んでから「x402の点検して」と頼みます。渡るのは選んだファイルの中身だけなので、選んだファイルの全体を点検します。</p>
+          <p>In a chat with the connector on, give the repository you want checked:</p>
+          <div className="ask mono">Check https://github.com/&lt;owner&gt;/&lt;repo&gt; for x402 issues</div>
+          <p>
+            Claude loads the check procedure, reads the files that matter for x402 (paid API routes, x402 configuration, hosting settings,
+            lockfiles) and reports findings on 11 items, each with the file and line.
+          </p>
+          <p className="note">
+            For a private repository, pick the files with “+” → “Add from GitHub” in the chat, then ask for an x402 check. Only the selected
+            files are shared, so the check covers those files in full.
+          </p>
         </section>
 
         <section id="connect">
           <h2>
-            <span className="k">つなぎ方 — </span>URL を1つ
+            <span className="k">Connect — </span>one URL
           </h2>
           <div className="urlrow">
             <span className="urlbox mono">{mcpUrl}</span>
-            <CopyButton text={mcpUrl} />
+            <CopyButton text={mcpUrl} label="Copy" done="Copied" />
           </div>
           <ol style={{ marginTop: 18 }}>
-            <li>claude.ai の「Customize &gt; Connectors」→「Add custom connector」で、名前と上の URL を入れて「続ける」。</li>
-            <li>認証は「No sign-in」を選んで追加します。</li>
-            <li>チャットの「＋」で、このコネクタがオンになっていることを確かめます。</li>
+            <li>On claude.ai, open “Customize &gt; Connectors” → “Add custom connector”, enter a name and the URL above, then “Continue”.</li>
+            <li>Choose “No sign-in” for authentication and add it.</li>
+            <li>In a chat, check that the connector is on under “+”.</li>
           </ol>
-          <p className="note">Free はカスタムコネクタが1つまでです。Team・Enterprise は、組織の Owner が設定から追加し、メンバーはそれに接続します。</p>
           <p className="note">
-            スキルとしても入れておきたいときは、
+            The same URL works without authentication in the Claude Desktop app and in other MCP clients that add remote servers by URL: Claude
+            Code, Cursor, VS Code with GitHub Copilot, Codex CLI and ChatGPT.
+          </p>
+          <p className="note">
+            Free plans allow one custom connector. On Team and Enterprise plans, an Owner adds the connector in the organization settings and
+            members connect to it.
+          </p>
+          <p className="note">
+            To also install it as a skill, upload the{" "}
             <a href="/x402-security-check.zip" download>
-              スキルの ZIP
-            </a>
-            を「Customize &gt; Skills」→「＋」→「Create skill」→「Upload a skill」でアップロードします（設定の「Code execution and file creation」をオン）。普段は要りません。
+              skill ZIP
+            </a>{" "}
+            under “Customize &gt; Skills” → “+” → “Create skill” → “Upload a skill” (with “Code execution and file creation” on). It is not
+            needed for normal use.
           </p>
         </section>
 
         <section id="tools">
           <h2>
-            <span className="k">ツール — </span>すべて読むだけ
+            <span className="k">Tools — </span>read-only
           </h2>
           <div className="tools">
             {TOOLS.map(([name, desc]) => (
@@ -128,20 +127,25 @@ export default async function Home() {
               </div>
             ))}
           </div>
-          <p className="note">どのツールも支払い・署名をせず、鍵を持ちません。外の URL は https だけで、内部のアドレスには接続しません。</p>
+          <p className="note">No tool pays, signs or holds keys. Outside URLs must be https, and internal addresses are refused.</p>
         </section>
 
         <section id="scope">
           <h2>
-            <span className="k">点検の範囲 — </span>11項目
+            <span className="k">Scope — </span>11 items
           </h2>
           <p>
-            seller の API サーバー側のコード（HTTP ハンドラ、x402 のミドルウェアの設定、CDN・ホスティングの設定、依存関係）を、入力の検証、402 の中身、決済の順序、再送、支払いと対象の一致、キャッシュ、有効期限、facilitator の結果、決済の応答ヘッダ、SDK のバージョン、秘密情報の11項目で見ます。
+            The check covers the seller’s API server code (HTTP handlers, x402 middleware settings, CDN and hosting settings, dependencies):
+            input checks before settlement, the contents of the 402, payment order, replays, payment and resource match, caching, expiry,
+            facilitator results, the payment response header, SDK versions, and secrets.
           </p>
-          <p className="note">網羅的な監査ではありません。指摘が無くても脆弱性が無いとは限りません。トークンのコントラクト、buyer 側のコード、渡されていない本番の設定は見ていません。</p>
+          <p className="note">
+            It is not a full audit. No findings does not mean no vulnerabilities. Token contracts, buyer-side code and production settings that
+            are not shared are not covered.
+          </p>
         </section>
       </main>
-      <footer>x402 Inc.</footer>
+      <footer>x402 Inc. · Logos are trademarks of their respective owners.</footer>
     </>
   );
 }
