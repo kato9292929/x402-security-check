@@ -4,12 +4,14 @@ import { Hands } from "./hands";
 
 /**
  * Official logo files, unmodified: GitHub and GitHub Copilot from brand.github.com (GitHub_Logos.zip),
- * Cursor from cursor.com/brand (cursor-brand-assets.zip). Logos are trademarks of their owners.
+ * Cursor from cursor.com/brand (cursor-brand-assets.zip), Solana as supplied (white lettering, so it sits on a dark chip).
+ * Logos are trademarks of their owners.
  */
-const LOGOS: { src: string; alt: string; h: number }[] = [
+const LOGOS: { src: string; alt: string; h: number; dark?: boolean }[] = [
   { src: "/logos/github.svg", alt: "GitHub", h: 19 },
   { src: "/logos/github-copilot.svg", alt: "GitHub Copilot", h: 19 },
   { src: "/logos/cursor.svg", alt: "Cursor", h: 15 },
+  { src: "/logos/solana.svg", alt: "Solana", h: 13, dark: true },
 ];
 
 const TOOLS: [string, string][] = [
@@ -56,7 +58,15 @@ export default async function Home() {
           <span className="works">Works with</span>
           {LOGOS.map((l) => (
             // eslint-disable-next-line @next/next/no-img-element
-            <img key={l.alt} src={l.src} alt={l.alt} style={{ height: l.h, width: "auto" }} />
+            l.dark ? (
+              <span className="chip" key={l.alt}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={l.src} alt={l.alt} style={{ height: l.h, width: "auto" }} />
+              </span>
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img key={l.alt} src={l.src} alt={l.alt} style={{ height: l.h, width: "auto" }} />
+            )
           ))}
         </div>
       </section>

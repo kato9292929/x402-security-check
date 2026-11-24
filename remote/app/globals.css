@@ -28,6 +28,8 @@ nav.top a.link:hover{color:#000}
 .logos{position:absolute;bottom:clamp(28px,6vh,64px);width:100%;display:flex;justify-content:center;flex-wrap:wrap;gap:clamp(26px,4.6vw,66px);padding:0 16px;color:#8d8d8d;font-size:clamp(14px,1.18vw,17px);font-weight:500;letter-spacing:-.01em}
 .logos{align-items:center}
 .logos img{display:block;opacity:.85}
+.logos .chip{display:inline-flex;align-items:center;background:#111;border-radius:8px;padding:7px 10px}
+.logos .chip img{opacity:1}
 .logos .works{color:var(--mute);font-size:clamp(12px,.95vw,14px);font-weight:400;letter-spacing:.02em}
 
 /* sections */
