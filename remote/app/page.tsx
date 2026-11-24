@@ -4,14 +4,14 @@ import { Hands } from "./hands";
 
 /**
  * Official logo files, unmodified: GitHub and GitHub Copilot from brand.github.com (GitHub_Logos.zip),
- * Cursor from cursor.com/brand (cursor-brand-assets.zip), Solana as supplied (white lettering, so it sits on a dark chip).
+ * Cursor from cursor.com/brand (cursor-brand-assets.zip), the Solana logomark as supplied.
  * Logos are trademarks of their owners.
  */
 const LOGOS: { src: string; alt: string; h: number; dark?: boolean }[] = [
   { src: "/logos/github.svg", alt: "GitHub", h: 19 },
   { src: "/logos/github-copilot.svg", alt: "GitHub Copilot", h: 19 },
   { src: "/logos/cursor.svg", alt: "Cursor", h: 15 },
-  { src: "/logos/solana.svg", alt: "Solana", h: 13, dark: true },
+  { src: "/logos/solana-mark.svg", alt: "Solana", h: 18 },
 ];
 
 const TOOLS: [string, string][] = [
