@@ -1,4 +1,4 @@
-:root{--bg:#f7f7f5;--ink:#111111;--mute:#9a9a9a;--sub:#7b7b7b;--line:#e4e4e0;--card:#ffffff}
+:root{--grad:linear-gradient(90deg,#f5a524,#22c55e,#0ea5e9,#8b5cf6,#ec4899,#f97316,#f5a524);--glow:linear-gradient(90deg,#ffcf5a,#7dffa8,#5ad7ff,#9b7bff,#ff6fd8,#ffb36b);--bg:#f7f7f5;--ink:#111111;--mute:#9a9a9a;--sub:#7b7b7b;--line:#e4e4e0;--card:#ffffff}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font-family:Inter,"Hiragino Sans","Noto Sans JP",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
@@ -56,3 +56,19 @@ footer{text-align:center;color:var(--mute);font-size:12.5px;padding:0 16px 40px}
   .hero-copy{top:20%}
   .logos{gap:14px 24px;font-size:13px}
 }
+
+/* colour accents: the CTA glow's spectrum, used sparingly */
+@keyframes hue-shift{from{background-position:0% 50%}to{background-position:200% 50%}}
+.grad{background:var(--grad);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;animation:hue-shift 14s linear infinite}
+.pill{position:relative}
+.pill::after{content:"";position:absolute;left:14%;right:14%;bottom:-5px;height:10px;border-radius:50%;background:var(--glow);filter:blur(7px);opacity:.7;z-index:-1;transition:opacity .3s}
+.pill:hover::after{opacity:1}
+nav.top{isolation:isolate}
+.docs h2 .k{background:var(--grad);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:hue-shift 14s linear infinite}
+.docs section{border-top:0;position:relative}
+.docs section+section::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:var(--glow);opacity:.55}
+.ask{position:relative;background:#111;border:1px solid transparent;background-image:linear-gradient(#111,#111),var(--glow);background-origin:border-box;background-clip:padding-box,border-box}
+button.copy{position:relative;box-shadow:0 6px 18px -8px rgba(155,123,255,.55),0 4px 14px -8px rgba(90,215,255,.5)}
+.tool b{background:var(--grad);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:hue-shift 14s linear infinite}
+.logos span{color:#6f6f6f}
+@media (prefers-reduced-motion:reduce){.grad,.docs h2 .k,.tool b{animation:none}}

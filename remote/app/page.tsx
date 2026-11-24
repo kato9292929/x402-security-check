@@ -47,7 +47,7 @@ export default async function Home() {
         </nav>
         <div className="hero-copy">
           <h1>
-            <span className="l1">Check your x402 payments</span>
+            <span className="l1 grad">Check your x402 payments</span>
             <span className="l2">in your code.</span>
           </h1>
           <p>Add one connector and paste your repository URL. No payment, no keys, no sign-in.</p>
@@ -56,10 +56,18 @@ export default async function Home() {
           </div>
         </div>
         <div className="logos">
+          <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+            <defs>
+              <linearGradient id="solana-gradient" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0" stopColor="#9945FF" />
+                <stop offset="1" stopColor="#14F195" />
+              </linearGradient>
+            </defs>
+          </svg>
           {LOGOS.map((k) => (
             <span key={k}>
               <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d={BRANDS[k].path} />
+                <path d={BRANDS[k].path} fill={BRANDS[k].color} />
               </svg>
               {BRANDS[k].name}
             </span>
