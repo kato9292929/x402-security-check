@@ -39,6 +39,14 @@ else
   echo "claude CLI not found: skipped (CI checks the manifests with tests/plugin.test.ts)"
 fi
 
+step "remote server (remote/)"
+if [ -d remote/node_modules ]; then
+  (cd remote && npm test --silent && npx tsc --noEmit && npx next build >"$tmp/next-build.txt" 2>&1) || { cat "$tmp/next-build.txt" >&2 2>/dev/null; exit 1; }
+  echo "remote: tests, typecheck and next build passed"
+else
+  echo "remote/node_modules is missing: skipped (run: cd remote && npm ci). CI runs it."
+fi
+
 step "risk paths changed (review needed; not a failure)"
 scripts/risk-paths.sh || true
 

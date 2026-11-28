@@ -1,20 +1,9 @@
-# Publishes a release to npm and to the official MCP Registry:
-#  - on a push to main whose package.json version has no v<version> tag yet
-#    (merging a version bump releases it; other pushes to main do nothing),
-#  - on a pushed version tag (v1.2.3),
-#  - or when run by hand from the Actions tab (workflow_dispatch on main).
-# Runs from main create the v<version> tag after publishing. Both npm and the MCP
-# Registry are authenticated with GitHub OIDC: npm through Trusted publishing
-# (https://docs.npmjs.com/trusted-publishers), the registry as in
-# https://modelcontextprotocol.io/registry/github-actions.md. No long-lived tokens.
-# If the version is already on npm (e.g. a staged version approved by hand), the
-# npm step is skipped and the run continues with the registry and the tag.
+# Publishes a release only when run by hand from the Actions tab (workflow_dispatch on main).
+# Pushes to main do not publish. The run publishes the package.json version if it has no
+# v<version> tag yet, then creates that tag.
 name: Publish
 
 on:
-  push:
-    branches: [main]
-    tags: ["v*"]
   workflow_dispatch:
 
 concurrency:
@@ -35,19 +24,14 @@ jobs:
       - name: Version to publish
         id: ver
         run: |
-          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
-            echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
-            echo "publish=true" >> "$GITHUB_OUTPUT"
+          if [ "${GITHUB_REF_NAME}" != "main" ]; then echo "Publishes from main only"; exit 1; fi
+          V="$(node -p 'require("./package.json").version')"
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          if git ls-remote --exit-code --tags origin "refs/tags/v$V" >/dev/null; then
+            echo "v$V is already released; nothing to publish."
+            echo "publish=false" >> "$GITHUB_OUTPUT"
           else
-            if [ "${GITHUB_REF_NAME}" != "main" ]; then echo "Publishes from main only"; exit 1; fi
-            V="$(node -p 'require("./package.json").version')"
-            echo "version=$V" >> "$GITHUB_OUTPUT"
-            if git ls-remote --exit-code --tags origin "refs/tags/v$V" >/dev/null; then
-              echo "v$V is already released; nothing to publish."
-              echo "publish=false" >> "$GITHUB_OUTPUT"
-            else
-              echo "publish=true" >> "$GITHUB_OUTPUT"
-            fi
+            echo "publish=true" >> "$GITHUB_OUTPUT"
           fi
 
       - uses: actions/setup-node@v5
@@ -117,8 +101,8 @@ jobs:
         if: steps.ver.outputs.publish == 'true'
         run: ./mcp-publisher publish
 
-      - name: Create the version tag (runs from main)
-        if: steps.ver.outputs.publish == 'true' && github.ref_type != 'tag'
+      - name: Create the version tag
+        if: steps.ver.outputs.publish == 'true'
         run: |
           git tag "v${{ steps.ver.outputs.version }}" "$GITHUB_SHA"
           git push origin "v${{ steps.ver.outputs.version }}"

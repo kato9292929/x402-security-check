@@ -1,6 +1,6 @@
 ---
 name: "x402-security-check"
-description: "x402のper-call決済を受け付けるAPIサーバー（seller）のコードを、402の中身・決済の順序・facilitatorの結果・SDKなど11項目に絞って点検する。「セキュリティチェック」「x402の点検」と頼まれたとき、または決済パス（402応答・/verify・/settle・payTo・金額・network）に触れる変更をコミットする前に使う。"
+description: "Security check of an x402 seller API server's code on 11 items (402 contents, input checks before settle, payment order, replays, caching, facilitator results, SDK advisories). Use for x402 checks."
 ---
 
 # x402 セキュリティチェック（seller版）
@@ -12,9 +12,24 @@ description: "x402のper-call決済を受け付けるAPIサーバー（seller）
 
 ## 範囲
 
+git が使えるとき（Claude Code など、リポジトリの中で動いているとき）：
+
 - 指定がなければ、main との差分（`git diff main...HEAD`）を対象にする。
 - 差分が空なら「差分なし」とだけ書いて止まる。自分の判断で全体の点検に切り替えない。
 - 「全体」と言われたときだけ、リポジトリ全体を対象にする。初めて点検するリポジトリでは、全体を1回回し、その後は差分だけにする。
+
+git が使えないとき（claude.ai で「Add from GitHub」や添付でファイルを渡されたとき）：
+
+- 渡されたファイルの全体を対象にする。差分や履歴は無いので、差分の点検はしない。
+- 公開リポジトリの GitHub の URL だけを渡されたときは、`read_repository` が使えればそれでファイルを読み、読めたファイルの全体を対象にする。
+- 次のファイルが渡されていなければ、どれを追加で選べばいいかをファイル名の例で伝える。足りないまま判定できない項目は「要確認」とし、足りないファイルを理由に書く。
+  - HTTPハンドラ（有料のAPIのルート）
+  - x402 のミドルウェア・SDK の設定（payTo・価格・network を書いているファイル）
+  - CDN・ホスティングの設定（`vercel.json`、`next.config.*`、`wrangler.toml` など）
+  - lockfile（`package-lock.json`、`pnpm-lock.yaml`、`yarn.lock`、`requirements*.txt`、`poetry.lock`、`uv.lock`、`go.sum` など）
+
+共通：
+
 - 対象は seller のAPIサーバー側のコード（HTTPハンドラ、x402のミドルウェア設定、CDN・ホスティングの設定、依存関係）に限る。
 - 対象外：USDC・JPYC等のトークンのコントラクト。buyer側のコード（ウォレットの上限、送金の確認など）。
 
@@ -24,8 +39,9 @@ x402-security-check の MCP のツールが使えるときは、次の項目で�
 
 - 項目2：`inspect_402`（本番またはステージングの URL が分かる場合）
 - 項目8：`get_facilitator_signers`
-- 項目10：`check_sdk_advisories`
+- 項目10：`check_sdk_advisories`（手元で動くときはリポジトリのパス、リモートのときは lockfile の中身とファイル名か、公開リポジトリの GitHub の URL を渡す）
 - 項目1・3・9：`lookup_probe`（Seller Probe に購入記録があるホストの場合）
+- 対象のファイルを読む：`read_repository`（公開リポジトリの URL を渡されたとき）
 - 課題 ID の確認：`list_issues`
 
 ## 最初に確かめること

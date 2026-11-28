@@ -1,6 +1,30 @@
 # x402 Security Check
 
-x402 の per-call 決済を受け付ける API サーバー（seller）のコードを、402 の中身・決済の順序・facilitator の結果・SDK など11項目に絞って点検する Claude Code プラグイン。
+Checks the code of an x402 seller's API server — the side that answers 402 and settles per-call payments — on 11 items: the contents of the 402, input checks before settlement, payment order, replays, caching, facilitator results, SDK advisories and more. It finds the problems a smart-contract audit does not: ones where the seller gives data away unpaid, and ones where a buyer pays and gets nothing.
+
+It comes in two forms that share the same code:
+
+- **claude.ai connector** (remote MCP server): `https://securitycheck.x402jp.com/api/mcp`
+- **Claude Code plugin**: a skill plus a local MCP server
+
+## Use it on claude.ai
+
+1. In claude.ai, open "Customize > Connectors" → "Add custom connector". Enter a name and `https://securitycheck.x402jp.com/api/mcp`, click "Continue", choose "No sign-in" and add it.
+2. In a chat with the connector on, ask:
+
+   ```
+   Check https://github.com/<owner>/<repo> for x402 issues
+   ```
+
+Claude loads the check procedure from the connector (tool `x402_security_check`), reads the files that matter for x402 (`read_repository`), and reports each finding with severity, file and line. For a private repository, select the files with "+" → "Add from GitHub" instead; only the selected files are shared, so the check covers those files in full.
+
+Free plans allow one custom connector. On Team and Enterprise plans, an Owner adds the connector in the organization settings and members connect to it.
+
+The same URL works without authentication in the Claude Desktop app and in other MCP clients that add remote servers by URL over Streamable HTTP, such as Claude Code (`claude mcp add --transport http x402-security-check https://securitycheck.x402jp.com/api/mcp`), Cursor, VS Code with GitHub Copilot, Codex CLI and ChatGPT.
+
+The site at https://securitycheck.x402jp.com/ has the connector URL and an optional skill ZIP ("Customize > Skills" → "+" → "Create skill" → "Upload a skill", with "Code execution and file creation" on). The skill is not needed when the connector is on.
+
+## Use it in Claude Code
 
 ```bash
 claude plugin marketplace add kato9292929/x402-wallet-mcp
@@ -10,41 +34,29 @@ claude plugin marketplace add kato9292929/x402-wallet-mcp
 claude plugin install x402-security-check@x402inc
 ```
 
-マーケットプレイス `x402inc` は AgentPay402 MCP（[kato9292929/x402-wallet-mcp](https://github.com/kato9292929/x402-wallet-mcp)）と共通。Claude Code の中では `/plugin marketplace add kato9292929/x402-wallet-mcp` と `/plugin install x402-security-check@x402inc` でも同じ。インストール後、新しいセッションを始める。Node.js 20 以上と npm が PATH にあること（Claude Code がインストール時に `package-lock.json` から依存を入れる）。設定項目や API キーはない。
+The marketplace `x402inc` is shared with AgentPay402 MCP. Start a new session, then run `/x402-security-check` or ask for an x402 security check. By default it checks `git diff main...HEAD`; say "full" (全体) to check the whole repository. Node.js 20+ and npm must be on your PATH.
 
-更新：`claude plugin marketplace update x402inc`。インストールせずに試す：`claude --plugin-dir /path/to/x402-security-check`。
+The skill works without the MCP tools: it then judges from the code and settings alone. With the tools, it adds evidence.
 
-## 何が入っているか
+## Tools
 
-| 部分 | 役割 |
-| - | - |
-| スキル `x402-security-check`（`skills/x402-security-check/SKILL.md`） | コードを読んで判断する。11項目の手順、重大度の基準、出力の形を持つ。「セキュリティチェック」「x402 の点検」と頼むか、`/x402-security-check` で呼ぶ。指定がなければ `git diff main...HEAD` を、「全体」と言えばリポジトリ全体を見る |
-| MCP サーバー `x402-security-check`（`server/`） | 決まった手順で判定できる確認だけをツールにしたもの。スキルはツールがあれば根拠に足し、無ければコードと設定だけで判定する |
+All tools are read-only. None of them pays, signs, or receives or holds private keys or wallet credentials.
 
-点検の対象は seller の API サーバー側（HTTP ハンドラ、x402 のミドルウェア設定、CDN・ホスティングの設定、依存関係）。トークンのコントラクトと buyer 側のコードは対象外。
-
-## MCP のツール
-
-すべて読むだけ。支払い・署名はしない。秘密鍵・ウォレットの認証情報は受け取らず、持たない。
-
-| ツール | 入力 | 返すもの | 項目 |
+| Tool | Input | Returns | Item |
 | - | - | - | - |
-| `check_sdk_advisories` | リポジトリのパス | lockfile（`package-lock.json`・`pnpm-lock.yaml`・`yarn.lock`・`requirements*.txt`・`poetry.lock`・`uv.lock`・`Pipfile.lock`・`go.sum`）にある x402 SDK の版と、`data/advisories.json` の修正版より古いものの一覧。lockfile のファイル名・行番号・該当行も返す | 10 |
-| `inspect_402` | URL、メソッド（GET・HEAD・POST）、本文（任意）、掲載価格（任意） | 支払いヘッダを付けずに叩いたときのステータスと、`PAYMENT-REQUIRED`（v1 は本文）の中身。各 `accepts` について、amount の単位換算、asset のコントラクトから公開 RPC で読んだ EIP-712 ドメイン（name・version、あれば `DOMAIN_SEPARATOR` も再計算して照合）との一致、network と asset の組み合わせ、入力の定義の有無。402 以外（200・401・404 など）はそのまま返す | 2 |
-| `get_facilitator_signers` | facilitator の URL | `/supported` が返す署名者の一覧（`eip155:*`・`solana:*` など）、Solana の fee payer、対応する kind | 8 |
-| `lookup_probe` | ホスト名（または URL） | [Seller Probe](https://probe.x402jp.com) の公開データ（`/data/curated.json`）のうち、そのホストの購入結果（送ったリクエスト・ステータス・tx・チェーン上の確認・判定）と、その判定がどの項目の根拠になるか | 1・3・9 |
-| `list_issues` | なし | `data/issues.json`（25件の課題 ID・内容・段階・誰が損をするか・11項目との対応） | 全体 |
+| `x402_security_check` (connector) | — | The check procedure: scope, the 11 items, severity levels, report format | all |
+| `read_repository` (connector) | public GitHub URL, optional `paths` | x402 source files and hosting / framework configuration with line numbers (up to 35,000 characters), files the x402 code imports, lockfile names; with `paths`, those files | all |
+| `check_sdk_advisories` | plugin: repository path; connector: lockfile contents or a public GitHub URL | x402 SDK versions found in lockfiles (npm, pnpm, yarn, pip, poetry, uv, Pipfile, go.sum) and the ones older than the fixed version in `data/advisories.json`, with file, line and text | 10 |
+| `inspect_402` | URL, method (GET/HEAD/POST), optional body, optional listed price | The status without any payment header and the decoded `PAYMENT-REQUIRED` (v2 header or v1 body). Per `accepts` entry: amount in token units, network/asset match, the token's EIP-712 name/version (and `DOMAIN_SEPARATOR` when present) read over a public RPC and compared with `extra`, and whether an input definition is published. Other statuses are returned as they are | 2 |
+| `get_facilitator_signers` | facilitator URL | The signers `/supported` publishes (`eip155:*`, `solana:*`, ...), Solana fee payers, supported kinds | 8 |
+| `lookup_probe` | host or URL | [Seller Probe](https://probe.x402jp.com)'s public purchase records for the host (request, status, tx, on-chain check, outcome) and which item each outcome is evidence for | 1, 3, 9 |
+| `list_issues` | — | `data/issues.json`: the 25 issues (B1–B7, S1–S9, F1–F4, K1–K3, C1–C2) and the items they map to | all |
 
-通信するのは次だけ。
+Network access: one request to the URL you pass (redirects are not followed; no `PAYMENT-SIGNATURE`, `X-PAYMENT`, `Authorization` or cookies), `eth_call` to public RPCs (`server/src/chains.ts`, overridable with `X402SC_RPC_URL_<chain id>`), `<facilitator>/supported`, Seller Probe's `/data/curated.json`, and GitHub (`api.github.com` tree listing, `raw.githubusercontent.com`). The connector accepts https only and refuses loopback, private, link-local (cloud metadata) and other reserved addresses after resolving the host, connecting to the address it checked (`server/src/net-guard.ts`). Calls to the connector are rate limited with a Vercel Firewall rule (ID `x402-security-check-mcp`, condition `@vercel/firewall`); without the rule there is no limit.
 
-- `inspect_402`：引数の URL への1回のリクエスト（リダイレクトは追わない）。`PAYMENT-SIGNATURE`・`X-PAYMENT`・`Authorization`・Cookie は付けない。EVM の asset について、公開 RPC への `eth_call`（`name()`・`version()`・`decimals()`・`eip712Domain()`・`DOMAIN_SEPARATOR()`）。RPC は `server/src/chains.ts` の一覧で、`X402SC_RPC_URL_<chain id>`（例 `X402SC_RPC_URL_8453`）で差し替えられる
-- `get_facilitator_signers`：`<facilitator>/supported` への GET
-- `lookup_probe`：`https://probe.x402jp.com/data/curated.json` への GET（`X402SC_PROBE_DATA_URL` で差し替え可）
-- `check_sdk_advisories`・`list_issues`：通信しない（ローカルのファイルだけ）
+### Example: `inspect_402` on a public testnet seller
 
-### 実行例：testnet の公開エンドポイントに `inspect_402`
-
-2026-11-20、Base Sepolia の公開デモ seller（AgentPay402 MCP の結合テストで使ったもの）に対して、MCP の stdio 経由で実行した結果。支払いヘッダは送っていない。`PAYMENT-REQUIRED` の生の中身と説明文は省略した。
+Run on 2026-11-20 against a public Base Sepolia demo seller, over MCP stdio, without any payment header. The raw `PAYMENT-REQUIRED` and the long description are omitted.
 
 ```json
 {"name":"inspect_402","arguments":{"url":"https://wallets-demo-seller-server.calebgcarithers.workers.dev/weather?location=Tokyo","listed_price":"0.001"}}
@@ -74,7 +86,7 @@ claude plugin install x402-security-check@x402inc
     "extensions": [
       "bazaar"
     ],
-    "raw": "(PAYMENT-REQUIRED を復号したもの。省略)"
+    "raw": "(decoded PAYMENT-REQUIRED, omitted)"
   },
   "accepts": [
     {
@@ -147,36 +159,57 @@ claude plugin install x402-security-check@x402inc
 }
 ```
 
-`extra.name`・`extra.version`（`USDC`・`2`）は、Base Sepolia の USDC コントラクトから `sepolia.base.org` で読んだ値と一致し、`DOMAIN_SEPARATOR()` も再計算と一致した。amount `1000` は 0.001 USDC で、掲載価格 0.001 と一致。指摘は testnet であることの info だけ。
+`extra.name` / `extra.version` (`USDC` / `2`) match the values read from the Base Sepolia USDC contract via `sepolia.base.org`, and `DOMAIN_SEPARATOR()` matches the recomputed value. The amount `1000` is 0.001 USDC, equal to the listed price. The only finding is the testnet notice.
 
-## MCP が無いとき
+## Data
 
-スキルだけで点検は最後まで動く。SKILL.md の手順はコードと設定を読んで判定する形で書かれていて、ツールは「使えるときは根拠に足す」扱い。例えば項目10はツールが無ければ lockfile を直接読み、項目2は 402 を返すコードと設定を読む。
+- `data/advisories.json`: published x402 SDK advisories and their fixed versions, edited by hand. It starts with [GHSA-qr2g-p6q7-w82m](https://github.com/advisories/GHSA-qr2g-p6q7-w82m) (Solana payment verification; fixed in npm `@x402/svm` 2.6.0, PyPI `x402` 2.3.0, Go `github.com/coinbase/x402/go` 2.5.0).
+  - `npm run update-advisories` (`-- --dry-run` to not write) reads x402 advisories from the GitHub Advisory Database's public API (no key, one request per ecosystem) and adds only IDs not yet in the file. Review the added entries before committing.
+  - The Advisories workflow (`.github/workflows/advisories.yml`) runs the same check in dry-run mode every Monday (02:17 UTC) and opens one issue per new advisory ID. It never edits the file.
+- `data/issues.json`: the 25 issues from [x402 per-call APIの実装上の脆弱性 サマリー](https://note.com/x402inc/n/nb2221395494a) and the skill items they map to. Buyer-side and market-wide issues (B1–B5, B7, S3, S4, F4, C1, C2) are outside a seller code check and map to no item.
 
-## データ
+## Scope
 
-- `data/advisories.json`：x402 SDK の公開アドバイザリと修正版。手で更新する。最初は [GHSA-qr2g-p6q7-w82m](https://github.com/advisories/GHSA-qr2g-p6q7-w82m)（Solana 支払いの検証の欠陥。修正版：npm `@x402/svm` 2.6.0、PyPI `x402` 2.3.0、Go `github.com/coinbase/x402/go` 2.5.0）。
-  - `npm run update-advisories`（`-- --dry-run` で書き込まない）が GitHub Advisory Database の公開 API（`GET https://api.github.com/advisories?ecosystem=...&affects=...`、キー不要、エコシステムごとに1回）から x402 関連を取り直し、まだ無い ID だけを足す。既存の項目は書き換えない。足された項目の summary・issue・item を見直してからコミットする。キー無しの上限は IP あたり60回/時。
-- `data/issues.json`：[x402 per-call APIの実装上の脆弱性 サマリー](https://note.com/x402inc/n/nb2221395494a) の25件（B1〜B7、S1〜S9、F1〜F4、K1〜K3、C1〜C2）と、スキルの11項目との対応。buyer 側・市場全体の課題（B1〜B5・B7、S3、S4、F4、C1、C2）は seller のコードの点検範囲の外なので、どの項目にも対応させていない。
+The check covers the seller's API server code: HTTP handlers, x402 middleware settings, CDN and hosting settings, and dependencies. It is limited to 11 items and is not a full security audit; no findings does not mean no vulnerabilities. Token contracts, buyer-side code and production settings that are not in the repository are not covered.
 
-## npm・他の MCP クライアント
+## How it fits with other x402 Inc. products
 
-同じサーバーを stdio の MCP サーバーとして単体でも使える：`npx -y x402-security-check-mcp`（npm `x402-security-check-mcp`、MCP Registry `io.github.kato9292929/x402-security-check-mcp`）。リポジトリのルートには [Agent Plugins 1.0](https://agent-plugins.org/specification) の `plugin.json`・`mcp.json` もあり、こちらは `npx -y x402-security-check-mcp@<version>` で起動する。
+1. **Before the seller ships**: x402 Security Check checks the code.
+2. **After it ships**: [Seller Probe](https://probe.x402jp.com) buys from it and publishes whether the data arrived, matched its description, and whether the transfer is on chain. `lookup_probe` uses these records.
+3. **Before a buyer pays**: [AgentPay402 MCP](https://github.com/kato9292929/x402-wallet-mcp) looks up Seller Probe and stops payments to sellers that did not deliver.
 
-## 開発
+## Repository layout
+
+```
+.claude-plugin/plugin.json        Claude Code plugin
+.mcp.json                         starts server/dist/index.js (stdio) from the plugin
+skills/x402-security-check/       the skill (SKILL.md)
+server/src                        MCP server and tools (TypeScript); server/dist is the committed build
+remote/                           claude.ai connector: Next.js app with mcp-handler at /api/mcp, and the site
+data/                             advisories.json, issues.json
+tests/                            tests with local mocks (402 seller, JSON-RPC, facilitator, Seller Probe, TLS server)
+```
+
+`remote/` runs the same tool code as the plugin: its build copies `server/dist`, `data` and the skill, and rebuilds the skill ZIP (with `x402-security-check/` at the top). On Vercel the project's Root Directory is `remote`, with "Include files outside the root directory in the Build Step" on.
+
+## Development
 
 ```bash
 npm ci
 ```
 
 ```bash
+cd remote && npm ci
+```
+
+```bash
 npm run verify
 ```
 
-`npm run verify` が型検査・`server/dist` の一致・テスト・版の一致・`claude plugin validate`・risk-paths の一覧をまとめて回す（CI も同じ）。テストはネットワークに出ず、402 を返す seller・JSON-RPC・facilitator・Seller Probe はローカルのモックで確かめる。作業のきまりは [CLAUDE.md](CLAUDE.md)。
+`npm run verify` runs the type check, checks that `server/dist` is the build of `server/src`, runs the tests, checks that versions agree, runs `claude plugin validate .`, tests and builds `remote/`, and lists changed paths from `risk-paths`. CI runs the same checks. Tests do not use the network.
 
-リリース：`package.json`・`server.json`（2か所）・`.claude-plugin/plugin.json`・`plugin.json`・`mcp.json` の版・`server/src/version.ts` をそろえて main にマージすると、Publish ワークフローが npm（Trusted publishing）と MCP Registry に公開し、`v<version>` のタグを付ける。
+Releases: set the same version in `package.json`, `server.json` (two places), `.claude-plugin/plugin.json`, `plugin.json`, the pin in `mcp.json` and `server/src/version.ts`, and merge to main. Pushing to main does not publish; the Publish workflow publishes only when run by hand from the Actions tab.
 
-## ライセンス
+## License
 
 MIT

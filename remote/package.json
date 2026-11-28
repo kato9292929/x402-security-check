@@ -1,0 +1,34 @@
+{
+  "name": "x402-security-check-remote",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "prepare": "node scripts/prepare.mjs",
+    "prebuild": "node scripts/prepare.mjs",
+    "build": "next build",
+    "start": "next start",
+    "dev": "node scripts/prepare.mjs && next dev",
+    "pretest": "node scripts/prepare.mjs",
+    "test": "vitest run",
+    "typecheck": "node scripts/prepare.mjs && tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "^2.4.0",
+    "@noble/hashes": "^2.4.0",
+    "@vercel/firewall": "^1.2.6",
+    "mcp-handler": "^2.4.0",
+    "next": "^16.4.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "typescript": "^5.9.3",
+    "vitest": "^5.1.1"
+  }
+}

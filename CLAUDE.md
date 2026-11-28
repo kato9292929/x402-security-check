@@ -20,7 +20,7 @@ npm run verify
 - **スキルは MCP が無くても最後まで動く。** SKILL.md の手順を MCP のツールに依存させない。ツールは根拠を足すだけ。
 - **SKILL.md の本文は持ち主の仕様。** 文言を変えるときは、変更を提案して人の了承を得てから。
 - **`inspect_402` は 402 以外の応答も判断せずにそのまま返す。** 判断はスキルがする。
-- `data/advisories.json` は手で更新する。`npm run update-advisories` は新しい ID を足すだけで、既存の項目は書き換えない。足された項目は summary・issue・item を見直してからコミットする。
+- `data/advisories.json` は手で更新する。`npm run update-advisories` は新しい ID を足すだけで、既存の項目は書き換えない。足された項目は summary・issue・item を見直してからコミットする。毎週の確認は `.github/workflows/advisories.yml` が行い、新しい ID ごとに issue を開く（ファイルは書き換えない）。
 
 ## risk-paths
 

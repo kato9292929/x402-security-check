@@ -52,6 +52,13 @@ describe("check_sdk_advisories", () => {
     expect(checkSdkAdvisories(repo({ "package-lock.json": npmLock("2.28.0") }), data).vulnerable).toEqual([]);
   });
 
+  it("npm: entries written on one line", () => {
+    const lock = ['{', '  "packages": {', '    "node_modules/@x402/svm": { "version": "2.5.0" },', '    "node_modules/@x402/evm": { "version": "2.5.0" }', "  }", "}"].join("\n");
+    const r = checkSdkAdvisories(repo({ "package-lock.json": lock }), data);
+    expect(r.packages.map((p) => `${p.line} ${p.package}@${p.version}`)).toEqual(["3 @x402/svm@2.5.0", "4 @x402/evm@2.5.0"]);
+    expect(r.vulnerable.map((v) => v.package)).toEqual(["@x402/svm"]);
+  });
+
   it("pnpm and yarn lockfiles", () => {
     const pnpm = ["lockfileVersion: '9.0'", "", "packages:", "", "  '@x402/svm@2.4.0':", "    resolution: {integrity: sha512-x}", "", "snapshots:", "", "  '@x402/svm@2.4.0(typescript@5.9.3)':", "    dependencies: {}"].join("\n");
     const yarn = ['"@x402/svm@^2.3.0", "@x402/svm@^2.3.1":', '  version "2.3.1"', '  resolved "https://registry.yarnpkg.com/@x402/svm/-/svm-2.3.1.tgz"', "", '"@x402/core@npm:^2.7.0":', "  version: 2.7.0", ""].join("\n");
